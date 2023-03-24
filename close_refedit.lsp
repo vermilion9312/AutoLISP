@@ -1,0 +1,5 @@
+(defun c:ff()
+    (setvar "cmdecho" 0)
+    (command "refclose" "s" "")
+    (princ)
+)
