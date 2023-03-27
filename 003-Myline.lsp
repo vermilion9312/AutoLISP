@@ -1,3 +1,5 @@
+;; 57p / 정말 쉬운 오토리습, 이제 나도 짜보자! 기초편
+
 (defun c:myline()
 
     (setvar "cmdecho" 0)

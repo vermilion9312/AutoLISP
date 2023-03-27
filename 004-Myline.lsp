@@ -1,3 +1,5 @@
+;; 60p / 정말 쉬운 오토리습, 이제 나도 짜보자! 기초편
+
 (defun c:myline()
     (setvar "cmdecho" 0)
     ;; "cmdecho" 설정값을 0으로 만들고 출력 결과를 보이지 않게 함
