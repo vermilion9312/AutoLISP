@@ -1,4 +1,4 @@
-(defun c:ff()
+(defun c:77()
     (setvar "cmdecho" 0)
     (command "refclose" "s" "")
     (princ)
