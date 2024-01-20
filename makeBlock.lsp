@@ -1,4 +1,4 @@
-(defun c:BB (/ ent bp)
+(defun c:32 (/ ent bp)
    (graphscr)
 
    (prompt " >> ∞¥√º º±≈√ <<")
