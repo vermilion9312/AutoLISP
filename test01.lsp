@@ -1,0 +1,20 @@
+(defun counterBoreSpec (nominalDia)
+  (cond
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+    ((= nominalDia 4) (list 3.4 6.5 3.3))
+    ((= nominalDia 5) (list 3.4 6.5 3.3))
+    ((= nominalDia 6) (list 3.4 6.5 3.3))
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+    ((= nominalDia 3) (list 3.4 6.5 3.3))
+  )
+)
+
+
+(defun c:test ()
+  (counterBoreSpec 3)
+)

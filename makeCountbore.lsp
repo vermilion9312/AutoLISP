@@ -1,31 +1,13 @@
-(defun c:77 ()
-  
-  (defun makeCircle (centerPoint innerDia outerDia)
-    (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (/ innerDia 2))))
-    (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (/ outerDia 2))))
-  )
-  
-  (setq nominalDia (getint "\n type the size: "))
-  (setq selectPoint (getpoint "\n Select the center point: "))
-  
-  (cond
-    ((= nominalDia 3) (makeCircle selectPoint 3.4 6.5) )
-    ((= nominalDia 4) (makeCircle selectPoint 4.5 8))
-    ((= nominalDia 5) (makeCircle selectPoint 5.5 9.5) )
-    ((= nominalDia 6) (makeCircle selectPoint 6.6 11) )
-    ((= nominalDia 8) (makeCircle selectPoint 9 14) )
-    ((= nominalDia 10) (makeCircle selectPoint 11 17.5) )
-    ((= nominalDia 12) (makeCircle selectPoint 14 20) )
-    ((= nominalDia 14) (makeCircle selectPoint 16 23) )
-    ((= nominalDia 16) (makeCircle selectPoint 18 26) )
-    ((= nominalDia 18) (makeCircle selectPoint 20 29) )
-    ((= nominalDia 20) (makeCircle selectPoint 22 32) )
-    ((= nominalDia 22) (makeCircle selectPoint 24 35) )
-    ((= nominalDia 24) (makeCircle selectPoint 26 39) )
-    ((= nominalDia 27) (makeCircle selectPoint 30 43) )
-    ((= nominalDia 30) (makeCircle selectPoint 33 48) )
-    ((= nominalDia 33) (makeCircle selectPoint 36 54) )
-    ; (t (princ "\n wrong"))
-    
-  )
+(defun rotationMatrix (ang coordinate)
+  (setq x (car coordinate))
+  (setq y (cadr coordinate))
+  (setq returnX (- (* (cos ang) x) (* (sin ang) y)))
+  (setq returnY (+ (* (sin ang) x) (* (cos ang) y)))
+  (list returnX returnY)
+)
+
+
+
+(defun c:555 ()
+  (princ (1+ (list 2 2)))
 )
