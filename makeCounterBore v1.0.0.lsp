@@ -32,6 +32,7 @@
     ((= tapSize 27) (list 30 43 29))
     ((= tapSize 30) (list 33 48 32))
     ((= tapSize 33) (list 36 54 35))
+    (t (setq returnValue T))
   )
 )
 
@@ -131,13 +132,13 @@
 
 ; 메인 함수
 (defun c:qq ()
-  (princ "23")
   (setq tapSize (getint "\n 탭 사이즈를 입력하세요: "))
   
-  ; (while ()
-  ;   (princ "\n 유효한 탭 사이즈가 아닙니다.")
-  ; )
-
+  (while (= (counterBoreSpec tapSize) T)
+    (princ "\n 유효한 탭 사이즈가 아닙니다.")
+    (setq tapSize (getint "\n 탭 사이즈를 입력하세요: "))
+  )
+  
   (setq drillDia (car (counterBoreSpec tapSize)))
   (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
   (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
@@ -153,12 +154,11 @@
     (makeTopView (getpoint "\n 중심점을 입력하세요: ") drillDia counterBoreDia)
   )
 
-    (princ drillDia)
-  (if (or (= view (option 1) (= view (strcase (option 1) nil))))
-    (setq startPoint (getpoint "\n 삽입면을 클릭하세요: "))
-    (setq endPoint (getpoint startPoint "\n 관통면을 클릭하세요: "))
-    (+ drillDia drillDia)
-    ; (makeSectionView startPoint endPoint drillDia counterBoreDia counterBoreDepth)
+  (if (or (= view (option 1)) (= view (strcase (option 1) nil)))
+    (progn
+      (setq startPoint (getpoint "\n 삽입면을 클릭하세요: "))
+      (setq endPoint (getpoint startPoint "\n 관통면을 클릭하세요: "))
+      (makeSectionView startPoint endPoint drillDia counterBoreDia counterBoreDepth)
+    )
   )
-  
 )
