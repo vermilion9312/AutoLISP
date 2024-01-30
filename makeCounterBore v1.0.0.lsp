@@ -1,5 +1,16 @@
-; 옵션키 설정, 소문자만 입력할 것
-(defun option (key)
+; 구멍 옵션
+(defun holeOption (key)
+  (cond
+    ((= key 0) (set returnKey "h"))
+    ((= key 1) (set returnKey "t"))
+    ((= key 2) (set returnKey "b"))
+    ((= key 3) (set returnKey "s"))
+  )
+  returnKey
+)
+
+; 뷰 옵션
+(defun viewOption (key)
   (cond
     ((= key 0) (setq returnKey "t"))
     ((= key 1) (setq returnKey "s"))
@@ -7,8 +18,10 @@
   returnKey
 )
 
-; 옵션 메뉴
-(defun optionMenu (opt1 opt2)
+
+
+; 뷰 옵션 메뉴
+(defun viewOptionMenu (opt1 opt2)
   (setq returnView (getstring (strcat "\n 카운터보어 뷰 선택 [" opt1 "(평면도)/" opt2 "(단면도)]: ")))
   returnView
 )
@@ -143,18 +156,18 @@
   (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
   (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
   
-  (setq view (optionMenu (strcase (option 0) nil) (strcase (option 1) nil)))
+  (setq view (viewOptionMenu (strcase (viewOption 0) nil) (strcase (viewOption 1) nil)))
   
-  (while (and (/= view (option 0)) (/= view (strcase (option 0) nil)) (/= view (option 1)) (/= view (strcase (option 1) nil)))
+  (while (and (/= view (viewOption 0)) (/= view (strcase (viewOption 0) nil)) (/= view (viewOption 1)) (/= view (strcase (viewOption 1) nil)))
     (princ "\n 옵션 키워드를 입력하세요.")
-    (setq view (optionMenu (strcase (option 0) nil) (strcase (option 1) nil)))
+    (setq view (viewOptionMenu (strcase (viewOption 0) nil) (strcase (viewOption 1) nil)))
   ) 
   
-  (if (or (= view (option 0)) (= view (strcase (option 0) nil)))
+  (if (or (= view (viewOption 0)) (= view (strcase (viewOption 0) nil)))
     (makeTopView (getpoint "\n 중심점을 입력하세요: ") drillDia counterBoreDia)
   )
 
-  (if (or (= view (option 1)) (= view (strcase (option 1) nil)))
+  (if (or (= view (viewOption 1)) (= view (strcase (viewOption 1) nil)))
     (progn
       (setq startPoint (getpoint "\n 삽입면을 클릭하세요: "))
       (setq endPoint (getpoint startPoint "\n 관통면을 클릭하세요: "))
