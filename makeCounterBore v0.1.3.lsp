@@ -1,17 +1,17 @@
 ; 옵션키 설정, 소문자만 입력할 것
-; (defun option (key)
-;   (cond
-;     ((= key 0) (setq returnKey "t")) ; 평면도
-;     ((= key 1) (setq returnKey "s")) ; 단면도
-;   )
-;   returnKey
-; )
+(defun option (key)
+  (cond
+    ((= key 0) (setq returnKey "t"))
+    ((= key 1) (setq returnKey "s"))
+  )
+  returnKey
+)
 
-; ; 옵션 메뉴
-; (defun optionMenu (opt1 opt2)
-;   (setq returnView (getstring (strcat "\n 카운터보어 뷰 선택 [" opt1 "(평면도)/" opt2 "(단면도)]: ")))
-;   returnView
-; )
+; 옵션 메뉴
+(defun optionMenu (opt1 opt2)
+  (setq returnView (getstring (strcat "\n 카운터보어 뷰 선택 [" opt1 "(평면도)/" opt2 "(단면도)]: ")))
+  returnView
+)
 
 ; 카운터 보어 규격
 (defun counterBoreSpec (tapSize)
@@ -74,13 +74,13 @@
   ; 각도 구하기
   (if (/= endPointX 0) (setq ang (atan (/ endPointY endPointX))))
   ;; 각도가 제2사분면이 제4사분면으로, 제3사분면이 제1사분면으로 처리되는 것을 방지
-  (if (and (< endPointX 0) (> endPointY 0)) (setq ang (+ ang PI)))
-  (if (and (< endPointX 0) (< endPointY 0)) (setq ang (+ ang PI)))
+  (if (and (< endPointX 0) (> endPointY 0)) (setq ang (+ ang pi)))
+  (if (and (< endPointX 0) (< endPointY 0)) (setq ang (+ ang pi)))
   ;; Y증가량이 0이라 각도가 0 나와서 180도 돌지 않을 것을 방지
-  (if (and (= endPointY 0) (< endPointX 0)) (setq ang (+ ang PI)))
+  (if (and (= endPointY 0) (< endPointX 0)) (setq ang (+ ang pi)))
   ;; 90도 270도 각도에서 x증가량이 0이라 각도를 못 구하는 것을 방지
-  (if (and (= endPointX 0) (> endPointY 0)) (setq ang (* PI 0.5)))
-  (if (and (= endPointX 0) (< endPointY 0)) (setq ang (* PI 1.5)))
+  (if (and (= endPointX 0) (> endPointY 0)) (setq ang (* pi 0.5)))
+  (if (and (= endPointX 0) (< endPointY 0)) (setq ang (* pi 1.5)))
   
   ; 각도가 0일 때 카운터보어 좌표
   (setq x1 startPointX)
@@ -130,7 +130,8 @@
 )
 
 ; 메인 함수
-(defun c:123 ()
+(defun c:qq ()
+  (princ "23")
   (setq tapSize (getint "\n 탭 사이즈를 입력하세요: "))
   
   ; (while ()
@@ -141,21 +142,23 @@
   (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
   (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
   
-  (setq view (getstring (strcat "\n 카운터보어 뷰 선택 [T(평면도)/S(단면도)]: ")))
+  (setq view (optionMenu (strcase (option 0) nil) (strcase (option 1) nil)))
   
   (while (and (/= view (option 0)) (/= view (strcase (option 0) nil)) (/= view (option 1)) (/= view (strcase (option 1) nil)))
     (princ "\n 옵션 키워드를 입력하세요.")
-    (setq view (getstring (strcat "\n 카운터보어 뷰 선택 [T(평면도)/S(단면도)]: ")))
+    (setq view (optionMenu (strcase (option 0) nil) (strcase (option 1) nil)))
   ) 
   
-  (if (or (= view "t") (= view "T"))
+  (if (or (= view (option 0)) (= view (strcase (option 0) nil)))
     (makeTopView (getpoint "\n 중심점을 입력하세요: ") drillDia counterBoreDia)
   )
-   
+
+    (princ drillDia)
+  (if (or (= view (option 1) (= view (strcase (option 1) nil))))
     (setq startPoint (getpoint "\n 삽입면을 클릭하세요: "))
     (setq endPoint (getpoint startPoint "\n 관통면을 클릭하세요: "))
-  (if (or (= view "s") (= view "S"))
-    (makeSectionView startPoint endPoint drillDia counterBoreDia counterBoreDepth)
+    (+ drillDia drillDia)
+    ; (makeSectionView startPoint endPoint drillDia counterBoreDia counterBoreDepth)
   )
-  (princ "fegfe")
+  
 )
