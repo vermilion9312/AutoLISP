@@ -12,8 +12,8 @@
 ; 뷰 옵션키
 (defun viewOptionKey (key)
   (cond
-    ((= key 0) (setq returnKey "8"))
-    ((= key 1) (setq returnKey "4"))
+    ((= key 0) (setq returnKey "t"))
+    ((= key 1) (setq returnKey "s"))
   )
   returnKey
 )
@@ -225,7 +225,7 @@
   (setq y3 (+ startPointY (/ drillDia 2)))
   (setq y4 (+ startPointY (/ counterBoreDia 2)))
   
-  ; (setq crdList (list (list x1 y1) (list x2 y1) (list x2 y2) (list x3 y2) (list x3 y3) (list x2 y3) (list x2 y4) (list x1 y4)))
+  (setq crdList (list (list x1 y1) (list x2 y1) (list x2 y2) (list x3 y2) (list x3 y3) (list x2 y3) (list x2 y4) (list x1 y4)))
   
   (setq crd1 (list x1 y1))
   (setq crd2 (list x2 y1))
@@ -239,6 +239,11 @@
   (setq crd10 (list x4 startPointY))
 
   ; 회전 변환
+  (setq i 0)
+  (while (< (length crdList))
+    (setq nextCrdList (append nextCrdList (rotationMatrix ang (nth i crdList))))
+    (setq i (1+ i))
+  )
   (setq crd1 (rotationMatrix ang crd1))
   (setq crd2 (rotationMatrix ang crd2))
   (setq crd3 (rotationMatrix ang crd3))
@@ -306,7 +311,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; 메인 함수
-(defun c:59 ()
+(defun c:qq ()
   ; CENTER2가 없으면 만듦
   (if (= (tblsearch "ltype" "CENTER2") nil)
     (command "._-linetype" "load" "CENTER2" "" "")
