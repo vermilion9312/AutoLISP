@@ -12,8 +12,8 @@
 ; 뷰 옵션키
 (defun viewOptionKey (key)
   (cond
-    ((= key 0) (setq returnKey "t"))
-    ((= key 1) (setq returnKey "s"))
+    ((= key 0) (setq returnKey "8"))
+    ((= key 1) (setq returnKey "4"))
   )
   returnKey
 )
@@ -239,11 +239,12 @@
   (setq crd10 (list x4 startPointY))
 
   ; 회전 변환
-  (setq i 0)
-  (while (< (length crdList))
-    (setq nextCrdList (append nextCrdList (rotationMatrix ang (nth i crdList))))
-    (setq i (1+ i))
-  )
+  ; (setq i 0)
+  ; (while (< (length crdList))
+  ;   (setq nextCrdList (append nextCrdList (rotationMatrix ang (nth i crdList))))
+  ;   (setq i (1+ i))
+  ; )
+  
   (setq crd1 (rotationMatrix ang crd1))
   (setq crd2 (rotationMatrix ang crd2))
   (setq crd3 (rotationMatrix ang crd3))
@@ -311,7 +312,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; 메인 함수
-(defun c:qq ()
+(defun c:59 ()
   ; CENTER2가 없으면 만듦
   (if (= (tblsearch "ltype" "CENTER2") nil)
     (command "._-linetype" "load" "CENTER2" "" "")
