@@ -39,10 +39,10 @@
   (setq counterBoreDia (* counterBoreDia 1.3))
   (setq centerPointX (car centerPoint))
   (setq centerPointY (cadr centerPoint))
-  (setq crd1 (list (- centerPointX (/ counterBoreDia 2)) centerPointY))
-  (setq crd2 (list (+ centerPointX (/ counterBoreDia 2)) centerPointY))
-  (setq crd3 (list centerPointX (- centerPointY (/ counterBoreDia 2))))
-  (setq crd4 (list centerPointX (+ centerPointY (/ counterBoreDia 2))))
+  (setq crd1 (list (- centerPointX (* counterBoreDia 0.5)) centerPointY))
+  (setq crd2 (list (+ centerPointX (* counterBoreDia 0.5)) centerPointY))
+  (setq crd3 (list centerPointX (- centerPointY (* counterBoreDia 0.5))))
+  (setq crd4 (list centerPointX (+ centerPointY (* counterBoreDia 0.5))))
 
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
   (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
@@ -119,17 +119,17 @@
 ; 카운터 싱크 규격
 (defun counterSinkSpec (tapSize)
   (cond
-    ((= tapSize 3) (list 3.4 1.75 (/ PI 2)))
-    ((= tapSize 4) (list 4.5 2.3 (/ PI 2)))
-    ((= tapSize 5) (list 5.5 2.8 (/ PI 2)))
-    ((= tapSize 6) (list 6.6 3.4 (/ PI 2)))
-    ((= tapSize 8) (list 9 4.4 (/ PI 2)))
-    ((= tapSize 10) (list 11 5.5 (/ PI 2)))
-    ((= tapSize 12) (list 14 6.5 (/ PI 2)))
-    ((= tapSize 14) (list 16 7 (/ PI 2)))
-    ((= tapSize 16) (list 18 7.5 (/ PI 2)))
-    ((= tapSize 18) (list 20 8 (/ PI 2)))
-    ((= tapSize 20) (list 22 8.5 (/ PI 2)))
+    ((= tapSize 3) (list 3.4 1.75 (* PI 0.5)))
+    ((= tapSize 4) (list 4.5 2.3 (* PI 0.5)))
+    ((= tapSize 5) (list 5.5 2.8 (* PI 0.5)))
+    ((= tapSize 6) (list 6.6 3.4 (* PI 0.5)))
+    ((= tapSize 8) (list 9 4.4 (* PI 0.5)))
+    ((= tapSize 10) (list 11 5.5 (* PI 0.5)))
+    ((= tapSize 12) (list 14 6.5 (* PI 0.5)))
+    ((= tapSize 14) (list 16 7 (* PI 0.5)))
+    ((= tapSize 16) (list 18 7.5 (* PI 0.5)))
+    ((= tapSize 18) (list 20 8 (* PI 0.5)))
+    ((= tapSize 20) (list 22 8.5 (* PI 0.5)))
     ((= tapSize 22) (list 24 13.2 (/ PI 3)))
     ((= tapSize 24) (list 26 14 (/ PI 3)))
     ((= tapSize 27) (list 30 14 (/ PI 3)))
@@ -153,8 +153,8 @@
 
 ; 탭 평면도 만들기
 (defun makeTapTopView (centerPoint tapDrillDia tapDia)
-  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (/ drillDia 2))))
-  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (/ tapDia 2)) (cons 62 1)))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* tapDia 0.5)) (cons 62 1)))
   (centerMark centerPoint counterBoreDia)
 )
 
@@ -176,8 +176,8 @@
 
 ; 카운터보어 평면도 만들기
 (defun makeCountBoreTopView (centerPoint drillDia counterBoreDia)
-  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (/ drillDia 2))))
-  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (/ counterBoreDia 2))))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* (* drillDia 1.0) 2))))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* (* counterBoreDia 1.0) 2))))
   (centerMark centerPoint counterBoreDia)
 )
 
@@ -220,10 +220,10 @@
   (setq x3 (+ startPointX dis))
   (setq x4 (+ dis (* dis 0.15)))
   
-  (setq y1 (- startPointY (/ counterBoreDia 2)))
-  (setq y2 (- startPointY (/ drillDia 2)))
-  (setq y3 (+ startPointY (/ drillDia 2)))
-  (setq y4 (+ startPointY (/ counterBoreDia 2)))
+  (setq y1 (- startPointY (* counterBoreDia 0.5)))
+  (setq y2 (- startPointY (* drillDia 0.5)))
+  (setq y3 (+ startPointY (* drillDia 0.5)))
+  (setq y4 (+ startPointY (* counterBoreDia 0.5)))
   
   (setq crdList (list (list x1 y1) (list x2 y1) (list x2 y2) (list x3 y2) (list x3 y3) (list x2 y3) (list x2 y4) (list x1 y4)))
   
@@ -327,9 +327,9 @@
   ; (princ (holeOptionKey 0))
   
   ; 구멍 옵션 메뉴
-  (setq holeOption (getstring (strcat "\n 구멍 유형 선택 [탭(T)/카운트보어(B)]: ")))
+  (setq holeOption (getstring (strcat "\n 구멍 유형 선택 [탭(T)/카운트보어(2)]: ")))
   (cond
-    ((= holeOption "b") (makeCounterBore tapSize drillDia counterBoreDepth))
+    ((= holeOption "2") (makeCounterBore tapSize drillDia counterBoreDepth))
   )
   
 
