@@ -196,6 +196,16 @@
   (setq xDiff (- endPointX startPointX))
   (setq yDiff (- endPointY startPointY))
   
+  ; 평행 이동 이전에 값 저장
+  ; (setq pastStartPointX startPointX)
+  ; (setq pastStartPointY startPointY)
+  
+  ; 시작점 기준 0, 0 좌표로 평행이동
+  ; (setq startPointX (- startPointX pastStartPointX))
+  ; (setq startPointY (- startPointY pastStartPointY))
+  ; (setq endPointX (- endPointX pastStartPointX))
+  ; (setq endPointY (- endPointY pastStartPointY))
+  
   ; 각도 구하기
   (if (/= xDiff 0) (setq radian (atan (/ yDiff xDiff))))
   ;; 각도가 제2사분면이 제4사분면으로, 제3사분면이 제1사분면으로 처리되는 것을 방지
@@ -234,7 +244,7 @@
 
   ; 회전 변환
   ; (setq i 0)
-  ; (while (< i (length crdList))
+  ; (while (< (length crdList))
   ;   (setq nextCrdList (append nextCrdList (rotationMatrix radian (nth i crdList))))
   ;   (setq i (1+ i))
   ; )
@@ -249,6 +259,18 @@
   (setq crd8 (rotationMatrix startPoint radian crd8))
   (setq crd9 (rotationMatrix startPoint radian crd9))
   (setq crd10 (rotationMatrix startPoint radian crd10))
+   
+  ; 다시 원래의 좌표로 평행이동
+  ; (setq crd1 (list (+ (car crd1) pastStartPointX) (+ (cadr crd1) pastStartPointY)))
+  ; (setq crd2 (list (+ (car crd2) pastStartPointX) (+ (cadr crd2) pastStartPointY)))
+  ; (setq crd3 (list (+ (car crd3) pastStartPointX) (+ (cadr crd3) pastStartPointY)))
+  ; (setq crd4 (list (+ (car crd4) pastStartPointX) (+ (cadr crd4) pastStartPointY)))
+  ; (setq crd5 (list (+ (car crd5) pastStartPointX) (+ (cadr crd5) pastStartPointY)))
+  ; (setq crd6 (list (+ (car crd6) pastStartPointX) (+ (cadr crd6) pastStartPointY)))
+  ; (setq crd7 (list (+ (car crd7) pastStartPointX) (+ (cadr crd7) pastStartPointY)))
+  ; (setq crd8 (list (+ (car crd8) pastStartPointX) (+ (cadr crd8) pastStartPointY)))
+  ; (setq crd9 (list (+ (car crd9) pastStartPointX) (+ (cadr crd9) pastStartPointY)))
+  ; (setq crd10 (list (+ (car crd10) pastStartPointX) (+ (cadr crd10) pastStartPointY)))
   
   ; 라인 그리기
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2)))
