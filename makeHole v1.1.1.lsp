@@ -143,11 +143,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; 회전 변환 행렬
-(defun rotationMatrix (ang coordinate)
+(defun rotationMatrix (refCrd ang coordinate)
+  (setq a (car refCrd))
+  (setq b (cadr refCrd))
   (setq x (car coordinate))
   (setq y (cadr coordinate))
-  (setq returnX (- (* (cos ang) x) (* (sin ang) y)))
-  (setq returnY (+ (* (sin ang) x) (* (cos ang) y)))
+  (setq returnX (+ (- (* (- x a) (cos ang)) (* (- y b) (sin ang))) a))
+  (setq returnY (+ (+ (* (- x a) (sin ang)) (* (- y b) (cos ang))) b))
   (list returnX returnY)
 )
 
@@ -191,19 +193,21 @@
   (setq startPointY (cadr startPoint))
   (setq endPointX (car endPoint))
   (setq endPointY (cadr endPoint))
+  (setq xDiff (- endPointX startPointX))
+  (setq yDiff (- endPointY startPointY))
   
   ; 평행 이동 이전에 값 저장
-  (setq pastStartPointX startPointX)
-  (setq pastStartPointY startPointY)
+  ; (setq pastStartPointX startPointX)
+  ; (setq pastStartPointY startPointY)
   
   ; 시작점 기준 0, 0 좌표로 평행이동
-  (setq startPointX (- startPointX pastStartPointX))
-  (setq startPointY (- startPointY pastStartPointY))
-  (setq endPointX (- endPointX pastStartPointX))
-  (setq endPointY (- endPointY pastStartPointY))
+  ; (setq startPointX (- startPointX pastStartPointX))
+  ; (setq startPointY (- startPointY pastStartPointY))
+  ; (setq endPointX (- endPointX pastStartPointX))
+  ; (setq endPointY (- endPointY pastStartPointY))
   
   ; 각도 구하기
-  (if (/= endPointX 0) (setq ang (atan (/ endPointY endPointX))))
+  (if (/= endPointX 0) (setq ang (atan (/ yDiff xDiff))))
   ;; 각도가 제2사분면이 제4사분면으로, 제3사분면이 제1사분면으로 처리되는 것을 방지
   (if (and (< endPointX 0) (> endPointY 0)) (setq ang (+ ang pi)))
   (if (and (< endPointX 0) (< endPointY 0)) (setq ang (+ ang pi)))
@@ -225,7 +229,7 @@
   (setq y3 (+ startPointY (* drillDia 0.5)))
   (setq y4 (+ startPointY (* counterBoreDia 0.5)))
   
-  (setq crdList (list (list x1 y1) (list x2 y1) (list x2 y2) (list x3 y2) (list x3 y3) (list x2 y3) (list x2 y4) (list x1 y4)))
+  ; (setq crdList (list (list x1 y1) (list x2 y1) (list x2 y2) (list x3 y2) (list x3 y3) (list x2 y3) (list x2 y4) (list x1 y4)))
   
   (setq crd1 (list x1 y1))
   (setq crd2 (list x2 y1))
@@ -245,28 +249,28 @@
   ;   (setq i (1+ i))
   ; )
   
-  (setq crd1 (rotationMatrix ang crd1))
-  (setq crd2 (rotationMatrix ang crd2))
-  (setq crd3 (rotationMatrix ang crd3))
-  (setq crd4 (rotationMatrix ang crd4))
-  (setq crd5 (rotationMatrix ang crd5))
-  (setq crd6 (rotationMatrix ang crd6))
-  (setq crd7 (rotationMatrix ang crd7))
-  (setq crd8 (rotationMatrix ang crd8))
-  (setq crd9 (rotationMatrix ang crd9))
-  (setq crd10 (rotationMatrix ang crd10))
+  (setq crd1 (rotationMatrix startPoint ang crd1))
+  (setq crd2 (rotationMatrix startPoint ang crd2))
+  (setq crd3 (rotationMatrix startPoint ang crd3))
+  (setq crd4 (rotationMatrix startPoint ang crd4))
+  (setq crd5 (rotationMatrix startPoint ang crd5))
+  (setq crd6 (rotationMatrix startPoint ang crd6))
+  (setq crd7 (rotationMatrix startPoint ang crd7))
+  (setq crd8 (rotationMatrix startPoint ang crd8))
+  (setq crd9 (rotationMatrix startPoint ang crd9))
+  (setq crd10 (rotationMatrix startPoint ang crd10))
    
   ; 다시 원래의 좌표로 평행이동
-  (setq crd1 (list (+ (car crd1) pastStartPointX) (+ (cadr crd1) pastStartPointY)))
-  (setq crd2 (list (+ (car crd2) pastStartPointX) (+ (cadr crd2) pastStartPointY)))
-  (setq crd3 (list (+ (car crd3) pastStartPointX) (+ (cadr crd3) pastStartPointY)))
-  (setq crd4 (list (+ (car crd4) pastStartPointX) (+ (cadr crd4) pastStartPointY)))
-  (setq crd5 (list (+ (car crd5) pastStartPointX) (+ (cadr crd5) pastStartPointY)))
-  (setq crd6 (list (+ (car crd6) pastStartPointX) (+ (cadr crd6) pastStartPointY)))
-  (setq crd7 (list (+ (car crd7) pastStartPointX) (+ (cadr crd7) pastStartPointY)))
-  (setq crd8 (list (+ (car crd8) pastStartPointX) (+ (cadr crd8) pastStartPointY)))
-  (setq crd9 (list (+ (car crd9) pastStartPointX) (+ (cadr crd9) pastStartPointY)))
-  (setq crd10 (list (+ (car crd10) pastStartPointX) (+ (cadr crd10) pastStartPointY)))
+  ; (setq crd1 (list (+ (car crd1) pastStartPointX) (+ (cadr crd1) pastStartPointY)))
+  ; (setq crd2 (list (+ (car crd2) pastStartPointX) (+ (cadr crd2) pastStartPointY)))
+  ; (setq crd3 (list (+ (car crd3) pastStartPointX) (+ (cadr crd3) pastStartPointY)))
+  ; (setq crd4 (list (+ (car crd4) pastStartPointX) (+ (cadr crd4) pastStartPointY)))
+  ; (setq crd5 (list (+ (car crd5) pastStartPointX) (+ (cadr crd5) pastStartPointY)))
+  ; (setq crd6 (list (+ (car crd6) pastStartPointX) (+ (cadr crd6) pastStartPointY)))
+  ; (setq crd7 (list (+ (car crd7) pastStartPointX) (+ (cadr crd7) pastStartPointY)))
+  ; (setq crd8 (list (+ (car crd8) pastStartPointX) (+ (cadr crd8) pastStartPointY)))
+  ; (setq crd9 (list (+ (car crd9) pastStartPointX) (+ (cadr crd9) pastStartPointY)))
+  ; (setq crd10 (list (+ (car crd10) pastStartPointX) (+ (cadr crd10) pastStartPointY)))
   
   ; 라인 그리기
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2)))
