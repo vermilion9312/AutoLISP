@@ -229,7 +229,7 @@
   (setq y3 (+ startPointY (* drillDia 0.5)))
   (setq y4 (+ startPointY (* counterBoreDia 0.5)))
   
-  ; (setq crdList (list (list x1 y1) (list x2 y1) (list x2 y2) (list x3 y2) (list x3 y3) (list x2 y3) (list x2 y4) (list x1 y4)))
+  (setq crdList (list (list x1 y1) (list x2 y1) (list x2 y2) (list x3 y2) (list x3 y3) (list x2 y3) (list x2 y4) (list x1 y4)))
   
   (setq crd1 (list x1 y1))
   (setq crd2 (list x2 y1))
@@ -242,6 +242,9 @@
   (setq crd9 (list x0 startPointY))
   (setq crd10 (list x4 startPointY))
 
+  (setq crdList (list crd1 crd2 crd3 crd3 crd4 crd5 crd6 crd7 crd9 crd10))
+  
+  
   ; 회전 변환
   ; (setq i 0)
   ; (while (< (length crdList))
@@ -249,16 +252,18 @@
   ;   (setq i (1+ i))
   ; )
   
-  (setq crd1 (rotationMatrix startPoint radian crd1))
-  (setq crd2 (rotationMatrix startPoint radian crd2))
-  (setq crd3 (rotationMatrix startPoint radian crd3))
-  (setq crd4 (rotationMatrix startPoint radian crd4))
-  (setq crd5 (rotationMatrix startPoint radian crd5))
-  (setq crd6 (rotationMatrix startPoint radian crd6))
-  (setq crd7 (rotationMatrix startPoint radian crd7))
-  (setq crd8 (rotationMatrix startPoint radian crd8))
-  (setq crd9 (rotationMatrix startPoint radian crd9))
-  (setq crd10 (rotationMatrix startPoint radian crd10))
+  ; (setq crd1 (rotationMatrix startPoint radian crd1))
+  ; (setq crd2 (rotationMatrix startPoint radian crd2))
+  ; (setq crd3 (rotationMatrix startPoint radian crd3))
+  ; (setq crd4 (rotationMatrix startPoint radian crd4))
+  ; (setq crd5 (rotationMatrix startPoint radian crd5))
+  ; (setq crd6 (rotationMatrix startPoint radian crd6))
+  ; (setq crd7 (rotationMatrix startPoint radian crd7))
+  ; (setq crd8 (rotationMatrix startPoint radian crd8))
+  ; (setq crd9 (rotationMatrix startPoint radian crd9))
+  ; (setq crd10 (rotationMatrix startPoint radian crd10))
+  
+  (mapcar 'romationMatrix startPoint radian crdList)
    
   ; 다시 원래의 좌표로 평행이동
   ; (setq crd1 (list (+ (car crd1) pastStartPointX) (+ (cadr crd1) pastStartPointY)))
@@ -279,6 +284,7 @@
   (entmake (list (cons 0 "LINE") (cons 10 crd7) (cons 11 crd8)))
   (entmake (list (cons 0 "LINE") (cons 10 crd2) (cons 11 crd7)))
   (entmake (list (cons 0 "LINE") (cons 10 crd9) (cons 11 crd10) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 crd9) (cons 40 1)))
 )
 
 ; 카운터 보어 만들기
@@ -316,7 +322,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; 메인 함수
-(defun c:59 ()
+(defun c:qq ()
   ; CENTER2가 없으면 만듦
   (if (= (tblsearch "ltype" "CENTER2") nil)
     (command "._-linetype" "load" "CENTER2" "" "")

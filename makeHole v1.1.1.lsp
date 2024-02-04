@@ -1,3 +1,51 @@
+; 메인 함수
+(defun c:59 (/ returnArr)
+  
+  (loadDialog)
+  
+  (princ returnArr)
+  (setq tapSize (requestTapSize))
+  
+  (setq drillDia (car (counterBoreSpec tapSize)))
+  (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
+  (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
+  
+  
+  ; 구멍 옵션 메뉴
+  (setq holeOption (getstring (strcat "\n 구멍 유형 선택 [탭(T)/카운트보어(2)]: ")))
+  (cond
+    ((= holeOption "2") (makeCounterBore tapSize drillDia counterBoreDepth))
+    ((= holeOption "t") (makeTap ))
+  )
+  
+  (princ)
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun loadDialog ()
+   
+   (setq dclId (load_dialog "holeDialog"))
+   
+   (if (not (new_dialog "holeDialog" dclId))
+     (exit)
+   )
+  
+  (action_tile "single" "(setq returnArr \"single\")")
+  (action_tile "multiple" "(setq returnArr $key)")
+   
+   (setq returnDialog (start_dialog))
+   (unload_dialog dclId)
+  
+ )
+
+(defun makeCenter2 ()
+  (if (= (tblsearch "ltype" "CENTER2") nil)
+    (command "._-linetype" "load" "CENTER2" "" "")
+  )
+)
+
 ; 구멍 옵션 키
 ; (defun holeOptionKey (key)
 ;   (cond
@@ -35,12 +83,15 @@
 
 
 ; 중심선 그리기
-(defun centerMark (centerPoint counterBoreDia)
-  (setq counterBoreDia (* counterBoreDia 1.3))
-  (setq centerPointX (car centerPoint))
-  (setq centerPointY (cadr centerPoint))
-  (setq crd1 (list (- centerPointX (* counterBoreDia 0.5)) centerPointY))
-  (setq crd2 (list (+ centerPointX (* counterBoreDia 0.5)) centerPointY))
+(defun makeCenterMark (point diameter)
+  
+  (setq pointX (car point))
+  (setq pointY (cadr point))
+  
+  (setq diameter (* diameter 1.3))
+  
+  (setq crd1 (list (- centerPointX (* counterBoreDia 0.5)) pointY))
+  (setq crd2 (list (+ centerPointX (* counterBoreDia 0.5)) pointY))
   (setq crd3 (list centerPointX (- centerPointY (* counterBoreDia 0.5))))
   (setq crd4 (list centerPointX (+ centerPointY (* counterBoreDia 0.5))))
 
@@ -143,7 +194,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; 회전 변환 행렬
-(defun rotationMatrix (refCrd radian coordinate)
+(defun rotateCoordinate (refCrd radian coordinate)
   (setq a (car refCrd))
   (setq b (cadr refCrd))
   (setq x (car coordinate))
@@ -153,11 +204,25 @@
   (list returnX returnY)
 )
 
+(defun rotateCoordinate (refCrd radian coordinate)
+  (setq a (car refCrd))
+  (setq b (cadr refCrd))
+  (setq x (car coordinate))
+  (setq y (cadr coordinate))
+  (setq returnX (+ (- (* (- x a) (cos radian)) (* (- y b) (sin radian))) a))
+  (setq returnY (+ (+ (* (- x a) (sin radian)) (* (- y b) (cos radian))) b))
+  (list returnX returnY)
+)
+
+(defun rotateCoordinates (refCrd radian crdList)
+  (mapcar (lambda (coordinate) rotateCoordinate(refCrd radian coordinate)) crdList)
+)
+
 ; 탭 평면도 만들기
 (defun makeTapTopView (centerPoint tapDrillDia tapDia)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* tapDia 0.5)) (cons 62 1)))
-  (centerMark centerPoint counterBoreDia)
+  (makeCenterMark centerPoint counterBoreDia)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -180,7 +245,7 @@
 (defun makeCountBoreTopView (centerPoint drillDia counterBoreDia)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* (* drillDia 1.0) 2))))
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* (* counterBoreDia 1.0) 2))))
-  (centerMark centerPoint counterBoreDia)
+  (makeCenterMark centerPoint counterBoreDia)
 )
 
 ; 카운터보어 단면도 만들기
@@ -198,21 +263,20 @@
   
   ; 각도 구하기
   (if (/= xDiff 0) (setq radian (atan (/ yDiff xDiff))))
-  ;; 각도가 제2사분면이 제4사분면으로, 제3사분면이 제1사분면으로 처리되는 것을 방지
-  (if (and (< xDiff 0) (> yDiff 0)) (setq radian (+ radian pi)))
-  (if (and (< xDiff 0) (< yDiff 0)) (setq radian (+ radian pi)))
-  ;; Y증가량이 0이라 각도가 0 나와서 180도 돌지 않을 것을 방지
-  (if (and (= yDiff 0) (< xDiff 0)) (setq radian (+ radian pi)))
-  ;; 90도 270도 각도에서 x증가량이 0이라 각도를 못 구하는 것을 방지
-  (if (and (= xDiff 0) (> yDiff 0)) (setq radian (* pi 0.5)))
-  (if (and (= xDiff 0) (< yDiff 0)) (setq radian (* pi 1.5)))
+  (cond
+    ((and (< xDiff 0) (> yDiff 0)) (setq radian (+ radian pi)))
+    ((and (< xDiff 0) (< yDiff 0)) (setq radian (+ radian pi)))
+    ((and (= yDiff 0) (< xDiff 0)) (setq radian (+ radian pi)))
+    ((and (= xDiff 0) (> yDiff 0)) (setq radian (* pi 0.5)))
+    ((and (= xDiff 0) (< yDiff 0)) (setq radian (* pi 1.5)))
+  )
   
   ; 각도가 0일 때 카운터보어 좌표
   (setq x0 (- startPointX (* dis 0.15)))
   (setq x1 startPointX)
   (setq x2 (+ startPointX counterBoreDepth))
   (setq x3 (+ startPointX dis))
-  (setq x4 (+ dis (* dis 0.15)))
+  (setq x4 (+ x3 (* dis 0.15)))
   
   (setq y1 (- startPointY (* counterBoreDia 0.5)))
   (setq y2 (- startPointY (* drillDia 0.5)))
@@ -231,24 +295,22 @@
   (setq crd8 (list x1 y4))
   (setq crd9 (list x0 startPointY))
   (setq crd10 (list x4 startPointY))
+  
+  (setq crdList (list crd1 crd2 crd3 crd4 crd5 crd6 crd7 crd8 crd9 crd10))
 
   ; 회전 변환
-  ; (setq i 0)
-  ; (while (< i (length crdList))
-  ;   (setq nextCrdList (append nextCrdList (rotationMatrix radian (nth i crdList))))
-  ;   (setq i (1+ i))
-  ; )
   
-  (setq crd1 (rotationMatrix startPoint radian crd1))
-  (setq crd2 (rotationMatrix startPoint radian crd2))
-  (setq crd3 (rotationMatrix startPoint radian crd3))
-  (setq crd4 (rotationMatrix startPoint radian crd4))
-  (setq crd5 (rotationMatrix startPoint radian crd5))
-  (setq crd6 (rotationMatrix startPoint radian crd6))
-  (setq crd7 (rotationMatrix startPoint radian crd7))
-  (setq crd8 (rotationMatrix startPoint radian crd8))
-  (setq crd9 (rotationMatrix startPoint radian crd9))
-  (setq crd10 (rotationMatrix startPoint radian crd10))
+  (setq crd1 (rotateCoordinate startPoint radian crd1))
+  (setq crd2 (rotateCoordinate startPoint radian crd2))
+  (setq crd3 (rotateCoordinate startPoint radian crd3))
+  (setq crd4 (rotateCoordinate startPoint radian crd4))
+  (setq crd5 (rotateCoordinate startPoint radian crd5))
+  (setq crd6 (rotateCoordinate startPoint radian crd6))
+  (setq crd7 (rotateCoordinate startPoint radian crd7))
+  (setq crd8 (rotateCoordinate startPoint radian crd8))
+  (setq crd9 (rotateCoordinate startPoint radian crd9))
+  (setq crd10 (rotateCoordinate startPoint radian crd10))
+  
   
   ; 라인 그리기
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2)))
@@ -288,33 +350,13 @@
   )
 )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun makeTap (centerPoint drillDia tapDia)
+  (setq centerPoint (getpoint))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* 4.1 0.5))))
+  (entmake (list (cons 0 "ARC") (cons 10 centerPoint) (cons 40 (* 5 0.5)) (cons 50 (* -100 (/ PI 180))) (cons 51 (* 170 (/ PI 180)))))
 
-; 메인 함수
-(defun c:59 ()
-  ; CENTER2가 없으면 만듦
-  (if (= (tblsearch "ltype" "CENTER2") nil)
-    (command "._-linetype" "load" "CENTER2" "" "")
-  )
-  
-  (setq tapSize (requestTapSize))
-  
-  (setq drillDia (car (counterBoreSpec tapSize)))
-  (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
-  (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
-  
-  ; (princ (holeOptionKey 0))
-  
-  ; 구멍 옵션 메뉴
-  (setq holeOption (getstring (strcat "\n 구멍 유형 선택 [탭(T)/카운트보어(2)]: ")))
-  (cond
-    ((= holeOption "2") (makeCounterBore tapSize drillDia counterBoreDepth))
-  )
-  
-
-  
-  (princ)
 )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
