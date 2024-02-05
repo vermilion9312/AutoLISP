@@ -3,20 +3,24 @@
   
   (loadDialog)
   
-  (princ returnArr)
-  (setq tapSize (requestTapSize))
-  
-  (setq drillDia (car (counterBoreSpec tapSize)))
-  (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
-  (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
-  
-  
-  ; 구멍 옵션 메뉴
-  (setq holeOption (getstring (strcat "\n 구멍 유형 선택 [탭(T)/카운트보어(2)]: ")))
-  (cond
-    ((= holeOption "2") (makeCounterBore tapSize drillDia counterBoreDepth))
-    ((= holeOption "t") (makeTap ))
+  (if (returnArr)
+    (alert "Hekk")
   )
+  
+  
+  ; (setq tapSize (requestTapSize))
+  
+  ; (setq drillDia (car (counterBoreSpec tapSize)))
+  ; (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
+  ; (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
+  
+  
+  ; ; 구멍 옵션 메뉴
+  ; (setq holeOption (getstring (strcat "\n 구멍 유형 선택 [탭(T)/카운트보어(2)]: ")))
+  ; (cond
+  ;   ((= holeOption "2") (makeCounterBore tapSize drillDia counterBoreDepth))
+  ;   ((= holeOption "t") (makeTap ))
+  ; )
   
   (princ)
 )
@@ -35,7 +39,7 @@
   (action_tile "single" "(setq returnArr \"single\")")
   (action_tile "multiple" "(setq returnArr $key)")
    
-   (setq returnDialog (start_dialog))
+   (start_dialog)
    (unload_dialog dclId)
   
  )
