@@ -1,7 +1,7 @@
 ; 메인 함수
 (defun c:59 (/ returnArr returnView returnHole returnTapSize returnCenterLine returnSlot
              centerPoint startPoint endPoint
-             tapSize drillDia counterBoreDia tapDia counterBoreDepth)
+             tapSize drillDia counterBoreDia tapDia counterBoreDepth counterSinkDepth)
   
   (loadCenter2) 
   (loadDialog)
@@ -18,6 +18,8 @@
   (setq drillDia (car (counterBoreSpec tapSize)))
   (setq counterBoreDia (cadr (counterBoreSpec tapSize)))
   (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
+  (setq counterSinkDepth (cadr (counterSinkSpec tapSize)))
+  (setq counterSinkRadian (caddr (counterSinkSpec tapSize)))
   
   (if (= returnHole "tap")
     (progn
@@ -33,16 +35,16 @@
     ((= returnArr "multiple") (setq selectionSet (ssget)))
   )
   
-  ; cond에서 맨 첫번째 부터 찾잖아 근데 centerPoint가 nil이라서 그런 거 아닐까?
-  ; 아니 근데 그럼 맨 앞의 조건문에서 먼저 걸렀어야 하는 거 아님?
-  ; 조건문 이후에 실행문까지 전부 읽는 건가?
-  
   (cond
-    ; ((and (= returnHole "drillHole") (= returnView "topView")) (drawDrillHoleTopView centerPoint drillDia (atoi returnCenterLine)))
     ((and (= returnHole "drillHole") (= returnView "topView") (= returnSlot "1")) (drawDrillHoleTopViewSlot startPoint endPoint drillDia (atoi returnCenterLine)))
+    ((and (= returnHole "drillHole") (= returnView "topView")) (drawDrillHoleTopView centerPoint drillDia (atoi returnCenterLine)))
     ((and (= returnHole "drillHole") (= returnView "sectionView")) (drawDrillHoleSectionView startPoint endPoint drillDia (atoi returnCenterLine)))
+    
     ((and (= returnHole "counterBore") (= returnView "topView")) (drawCounterBoreTopView centerPoint drillDia counterBoreDia (atoi returnCenterLine)))
     ((and (= returnHole "counterBore") (= returnView "sectionView")) (drawCounterBoreSectionView startPoint endPoint drillDia counterBoreDia counterBoreDepth (atoi returnCenterLine)))
+    
+    ((and (= returnHole "counterSink") (= returnView "topView")) (drawCounterSinkTopView centerPoint drillDia counterSinkDepth counterSinkRadian (atoi returnCenterLine)))
+    
     ((and (= returnHole "tap") (= returnView "topView")) (drawTapTopView centerPoint drillDia tapDia (atoi returnCenterLine)))
   )
 
@@ -89,10 +91,29 @@
   (unload_dialog dclId)
  )
 
+; 축척 관련 상수
+(defun CONSTANT (STRING)
+  (cond
+    ((= STRING "LINE_TYPE_SCALE") (setq RETURN 0.0262))
+    ((= STRING "CENTER_LINE_SCALE") (setq RETURN 1.3))
+    ((= STRING "CENTER_LINE_SCALE2") (setq RETURN (* 1.3 0.5)))
+  )
+  
+  RETURN
+)
+; == 선종류 축척 ==
+; 상한값: 0.0349
+; 중간값: 0.0262
+; 하한값: 0.0175
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ======================================================================== <기초 함수> ========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun tan (radian)
+ (setq return (/ (sin radian) (cos radian)))
+  return
+)
 
 ; 각도 구하기
 (defun findRadian (startPoint endPoint)
@@ -134,20 +155,16 @@
   (setq pointX (car point))
   (setq pointY (cadr point))
 
-  (setq diameter (* diameter 1.3))
+  (setq diameter (* diameter (CONSTANT "CENTER_LINE_SCALE")))
 
   (setq crd1 (list (- pointX (* diameter 0.5)) pointY))
   (setq crd2 (list (+ pointX (* diameter 0.5)) pointY))
   (setq crd3 (list pointX (- pointY (* diameter 0.5))))
   (setq crd4 (list pointX (+ pointY (* diameter 0.5))))
 
-  (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* diameter 0.0262))))
-  (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* diameter 0.0262))))
+  (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* diameter (CONSTANT "LINE_TYPE_SCALE")))))
+  (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* diameter (CONSTANT "LINE_TYPE_SCALE")))))
 )
-; == 선종류 축척 ==
-; 상한값: 0.0349
-; 중간값: 0.0262
-; 하한값: 0.0175
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -262,15 +279,15 @@
 
   (setq dis (distance startPoint endPoint))
   
-  ; (setq x0 (- (car startPoint) (* (+ dis drillDia) 0.15)))
-  (setq x0 (- (car startPoint) (* dis 0.15)))
+  (setq x0 (- (car startPoint) (* drillDia (CONSTANT "CENTER_LINE_SCALE2"))))
   (setq x1 (car startPoint))
   (setq x2 (+ (car startPoint) dis))
-  ; (setq x4 (+ x2 (* (+ dis drillDia) 0.15)))
-  (setq x4 (+ x2 (* dis 0.15)))
+  (setq x4 (+ x2 (* drillDia (CONSTANT "CENTER_LINE_SCALE2"))))
   
+  (setq y0 (- (cadr startPoint) (* drillDia (CONSTANT "CENTER_LINE_SCALE2"))))
   (setq y1 (- (cadr startPoint) (* drillDia 0.5)))
   (setq y2 (+ (cadr startPoint) (* drillDia 0.5)))
+  (setq y4 (+ (cadr startPoint) (* drillDia (CONSTANT "CENTER_LINE_SCALE2"))))
   
   (setq crd1 (list x1 y1))
   (setq crd2 (list x2 y1))
@@ -278,6 +295,10 @@
   (setq crd4 (list x2 y2))
   (setq crd5 (list x0 (cadr startPoint)))
   (setq crd6 (list x4 (cadr startPoint)))
+  (setq crd7 (list x1 y0))
+  (setq crd8 (list x1 y4))
+  (setq crd9 (list x2 y0))
+  (setq crd10 (list x2 y4))
   
   (setq radian (findRadian startPoint endPoint))
   
@@ -287,6 +308,10 @@
   (setq crd4 (rotateCoordinate startPoint radian crd4))
   (setq crd5 (rotateCoordinate startPoint radian crd5))
   (setq crd6 (rotateCoordinate startPoint radian crd6))
+  (setq crd7 (rotateCoordinate startPoint radian crd7))
+  (setq crd8 (rotateCoordinate startPoint radian crd8))
+  (setq crd9 (rotateCoordinate startPoint radian crd9))
+  (setq crd10 (rotateCoordinate startPoint radian crd10))
   
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2)))
   (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4)))
@@ -294,7 +319,11 @@
   (entmake (list (cons 0 "ARC") (cons 10 endPoint) (cons 40 (* drillDia 0.5)) (cons 50 (- radian (/ PI 2))) (cons 51 (+ radian (/ PI 2)))))
   
   (if (= centerLine 1)
-    (entmake (list (cons 0 "LINE") (cons 10 crd5) (cons 11 crd6) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
+    (progn
+      (entmake (list (cons 0 "LINE") (cons 10 crd5) (cons 11 crd6) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* drillDia (CONSTANT "LINE_TYPE_SCALE")))))
+      (entmake (list (cons 0 "LINE") (cons 10 crd7) (cons 11 crd8) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* drillDia (CONSTANT "LINE_TYPE_SCALE")))))
+      (entmake (list (cons 0 "LINE") (cons 10 crd9) (cons 11 crd10) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* drillDia (CONSTANT "LINE_TYPE_SCALE")))))
+    )
   )
 )
 
@@ -330,11 +359,9 @@
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2)))
   (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4)))
   (if (= centerLine 1)
-    (entmake (list (cons 0 "LINE") (cons 10 crd5) (cons 11 crd6) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
+    (entmake (list (cons 0 "LINE") (cons 10 crd5) (cons 11 crd6) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia (CONSTANT "LINE_TYPE_SCALE")))))
   )
 )
-
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ======================================================================= <카운터보어> ========================================================================
@@ -406,6 +433,21 @@
   (entmake (list (cons 0 "LINE") (cons 10 crd7) (cons 11 crd8)))
   (entmake (list (cons 0 "LINE") (cons 10 crd2) (cons 11 crd7)))
   (if (= centerLine 1)
-    (entmake (list (cons 0 "LINE") (cons 10 crd9) (cons 11 crd10) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
+    (entmake (list (cons 0 "LINE") (cons 10 crd9) (cons 11 crd10) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia (CONSTANT "LINE_TYPE_SCALE")))))
   )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; ======================================================================= <카운터싱크> ========================================================================
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; 카운터싱크 / 평면도
+(defun drawCounterSinkTopView (centerPoint drillDia counterSinkDepth counterSinkRadian centerLine)
+  
+  (setq counterSinkRadius (+ (* drillDia 0.5) (* counterSinkDepth (tan (* counterSinkRadian 0.5)))))
+  
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 counterSinkRadius)))
+  
+  (if (= centerLine 1) (drawCenterMark centerPoint (* counterSinkRadius 2)))
 )

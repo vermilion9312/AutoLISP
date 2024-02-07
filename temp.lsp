@@ -1,7 +1,15 @@
 (defun c:xx ()
   
-  (setq tempList (list "M3" "M4" "M5" "M6" "M8" "M10" "M12" "M14" "M16" "M18" "M20" "M22" "M24" "M27" "M30" "M33"))
+  (setq centerPoint (getpoint "\n삽입점 입력:"))
   
-  (princ (nth 1 tempList))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* 5 (CONSTANT "TEMP")))))
 
+)
+
+(defun CONSTANT (string)
+  (cond
+    ((= string "TEMP") (setq return 0.333))
+  )
+  
+  return
 )
