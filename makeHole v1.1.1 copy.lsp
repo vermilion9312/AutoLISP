@@ -263,7 +263,7 @@
   ; (setq crd9 (rotationMatrix startPoint radian crd9))
   ; (setq crd10 (rotationMatrix startPoint radian crd10))
   
-  ; (mapcar 'romationMatrix startPoint radian crdList)
+  (mapcar 'romationMatrix startPoint radian crdList)
    
   ; 다시 원래의 좌표로 평행이동
   ; (setq crd1 (list (+ (car crd1) pastStartPointX) (+ (cadr crd1) pastStartPointY)))
