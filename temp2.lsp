@@ -1,7 +1,4 @@
-(defun c:qq ()
-  (sayHi)
-)
-
-(defun sayHi ()
-  (princ "Hello")
+(defun c:xx ()
+  (command "circle" pause 5 "")
+  (princ)
 )
