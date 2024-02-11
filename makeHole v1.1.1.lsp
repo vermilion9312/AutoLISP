@@ -1,4 +1,4 @@
-; ¸ŞÀÎ ÇÔ¼ö
+; ë©”ì¸ í•¨ìˆ˜
 (defun c:59 (/ returnArr)
   
   (loadDialog)
@@ -11,8 +11,8 @@
   (setq counterBoreDepth (caddr (counterBoreSpec tapSize)))
   
   
-  ; ±¸¸Û ¿É¼Ç ¸Ş´º
-  (setq holeOption (getstring (strcat "\n ±¸¸Û À¯Çü ¼±ÅÃ [ÅÇ(T)/Ä«¿îÆ®º¸¾î(2)]: ")))
+  ; êµ¬ë© ì˜µì…˜ ë©”ë‰´
+  (setq holeOption (getstring (strcat "\n êµ¬ë© ìœ í˜• ì„ íƒ [íƒ­(T)/ì¹´ìš´íŠ¸ë³´ì–´(2)]: ")))
   (cond
     ((= holeOption "2") (makeCounterBore tapSize drillDia counterBoreDepth))
     ((= holeOption "t") (makeTap ))
@@ -46,7 +46,7 @@
   )
 )
 
-; ±¸¸Û ¿É¼Ç Å°
+; êµ¬ë© ì˜µì…˜ í‚¤
 ; (defun holeOptionKey (key)
 ;   (cond
 ;     ((= key 0) (set returnKey "h"))
@@ -57,7 +57,7 @@
 ;   returnKey
 ; )
 
-; ºä ¿É¼ÇÅ°
+; ë·° ì˜µì…˜í‚¤
 (defun viewOptionKey (key)
   (cond
     ((= key 0) (setq returnKey "8"))
@@ -66,15 +66,15 @@
   returnKey
 )
 
-; ±¸¸Û ¿É¼Ç ¸Ş´º
+; êµ¬ë© ì˜µì…˜ ë©”ë‰´
 ; (defun holeOptionMenu (opt1 opt2)
-;   (setq returnView (getstring (strcat "\n ±¸¸Û À¯Çü ¼±ÅÃ [" opt1 "(ÅÇ)/" opt2 "(Ä«¿îÆ®º¸¾î)]: ")))
+;   (setq returnView (getstring (strcat "\n êµ¬ë© ìœ í˜• ì„ íƒ [" opt1 "(íƒ­)/" opt2 "(ì¹´ìš´íŠ¸ë³´ì–´)]: ")))
 ;   returnView
 ; )
 
-; ºä ¿É¼Ç ¸Ş´º
+; ë·° ì˜µì…˜ ë©”ë‰´
 (defun viewOptionMenu (opt1 opt2)
-  (setq returnView (getstring (strcat "\n Ä«¿îÅÍº¸¾î ºä ¼±ÅÃ [Æò¸éµµ(" opt1 ")/´Ü¸éµµ(" opt2 ")]: ")))
+  (setq returnView (getstring (strcat "\n ì¹´ìš´í„°ë³´ì–´ ë·° ì„ íƒ [í‰ë©´ë„(" opt1 ")/ë‹¨ë©´ë„(" opt2 ")]: ")))
   returnView
 )
 
@@ -82,7 +82,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-; Áß½É¼± ±×¸®±â
+; ì¤‘ì‹¬ì„  ê·¸ë¦¬ê¸°
 (defun makeCenterMark (point diameter)
   
   (setq pointX (car point))
@@ -98,17 +98,17 @@
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
   (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
 )
-; == ¼±Á¾·ù ÃàÃ´ ==
-; »óÇÑ°ª: 0.0349
-; Áß°£°ª: 0.0262
-; ÇÏÇÑ°ª: 0.0175
+; == ì„ ì¢…ë¥˜ ì¶•ì²™ ==
+; ìƒí•œê°’: 0.0349
+; ì¤‘ê°„ê°’: 0.0262
+; í•˜í•œê°’: 0.0175
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ======================================================================== <±¸¸Û ±Ô°İ> ========================================================================
+; ======================================================================== <êµ¬ë© ê·œê²©> ========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; ÅÇ ±Ô°İ
+; íƒ­ ê·œê²©
 (defun tapSpec (tapSize)
   (cond
     ((= tapSize 3) (list (list tapSize 2.4 3 6) (list tapSize 2.4 4.5 7.5) (list tapSize 2.4 5.5 8.5)))
@@ -144,7 +144,7 @@
   )
 )
 
-; Ä«¿îÅÍ º¸¾î ±Ô°İ
+; ì¹´ìš´í„° ë³´ì–´ ê·œê²©
 (defun counterBoreSpec (tapSize)
   (cond
     ((= tapSize 3) (list 3.4 6.5 3.3))
@@ -167,7 +167,7 @@
   )
 )
 
-; Ä«¿îÅÍ ½ÌÅ© ±Ô°İ
+; ì¹´ìš´í„° ì‹±í¬ ê·œê²©
 (defun counterSinkSpec (tapSize)
   (cond
     ((= tapSize 3) (list 3.4 1.75 (* PI 0.5)))
@@ -193,7 +193,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; È¸Àü º¯È¯ Çà·Ä
+; íšŒì „ ë³€í™˜ í–‰ë ¬
 (defun rotateCoordinate (refCrd radian coordinate)
   (setq a (car refCrd))
   (setq b (cadr refCrd))
@@ -218,7 +218,7 @@
   (mapcar (lambda (coordinate) rotateCoordinate(refCrd radian coordinate)) crdList)
 )
 
-; ÅÇ Æò¸éµµ ¸¸µé±â
+; íƒ­ í‰ë©´ë„ ë§Œë“¤ê¸°
 (defun makeTapTopView (centerPoint tapDrillDia tapDia)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* tapDia 0.5)) (cons 62 1)))
@@ -228,12 +228,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; ÅÇ »çÀÌÁî ¿äÃ»
+; íƒ­ ì‚¬ì´ì¦ˆ ìš”ì²­
 (defun requestTapSize ()
-  (setq returnTapSize (getint "\n ÅÇ »çÀÌÁî¸¦ ÀÔ·ÂÇÏ¼¼¿ä: "))
+  (setq returnTapSize (getint "\n íƒ­ ì‚¬ì´ì¦ˆë¥¼ ì…ë ¥í•˜ì„¸ìš”: "))
   (while (= (counterBoreSpec returnTapSize) T)
-    (princ "\n À¯È¿ÇÑ ÅÇ »çÀÌÁî°¡ ¾Æ´Õ´Ï´Ù.")
-    (setq returnTapSize (getint "\n ÅÇ »çÀÌÁî¸¦ ÀÔ·ÂÇÏ¼¼¿ä: "))
+    (princ "\n ìœ íš¨í•œ íƒ­ ì‚¬ì´ì¦ˆê°€ ì•„ë‹™ë‹ˆë‹¤.")
+    (setq returnTapSize (getint "\n íƒ­ ì‚¬ì´ì¦ˆë¥¼ ì…ë ¥í•˜ì„¸ìš”: "))
   )
   returnTapSize
 )
@@ -241,19 +241,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Ä«¿îÅÍº¸¾î Æò¸éµµ ¸¸µé±â
+; ì¹´ìš´í„°ë³´ì–´ í‰ë©´ë„ ë§Œë“¤ê¸°
 (defun makeCountBoreTopView (centerPoint drillDia counterBoreDia)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* (* drillDia 1.0) 2))))
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* (* counterBoreDia 1.0) 2))))
   (makeCenterMark centerPoint counterBoreDia)
 )
 
-; Ä«¿îÅÍº¸¾î ´Ü¸éµµ ¸¸µé±â
+; ì¹´ìš´í„°ë³´ì–´ ë‹¨ë©´ë„ ë§Œë“¤ê¸°
 (defun makeCounterBoreSectionView (startPoint endPoint drillDia counterBoreDia counterBoreDepth)
-  ; ½ÃÀÛÁ¡°ú ³¡Á¡ »çÀÌÀÇ °Å¸®
+  ; ì‹œì‘ì ê³¼ ëì  ì‚¬ì´ì˜ ê±°ë¦¬
   (setq dis (distance startPoint endPoint))
   
-  ; ½ÃÀÛÁ¡°ú ³¡Á¡ÀÇ x, y ÁÂÇ¥
+  ; ì‹œì‘ì ê³¼ ëì ì˜ x, y ì¢Œí‘œ
   (setq startPointX (car startPoint))
   (setq startPointY (cadr startPoint))
   (setq endPointX (car endPoint))
@@ -261,7 +261,7 @@
   (setq xDiff (- endPointX startPointX))
   (setq yDiff (- endPointY startPointY))
   
-  ; °¢µµ ±¸ÇÏ±â
+  ; ê°ë„ êµ¬í•˜ê¸°
   (if (/= xDiff 0) (setq radian (atan (/ yDiff xDiff))))
   (cond
     ((and (< xDiff 0) (> yDiff 0)) (setq radian (+ radian pi)))
@@ -271,7 +271,7 @@
     ((and (= xDiff 0) (< yDiff 0)) (setq radian (* pi 1.5)))
   )
   
-  ; °¢µµ°¡ 0ÀÏ ¶§ Ä«¿îÅÍº¸¾î ÁÂÇ¥
+  ; ê°ë„ê°€ 0ì¼ ë•Œ ì¹´ìš´í„°ë³´ì–´ ì¢Œí‘œ
   (setq x0 (- startPointX (* dis 0.15)))
   (setq x1 startPointX)
   (setq x2 (+ startPointX counterBoreDepth))
@@ -298,7 +298,7 @@
   
   (setq crdList (list crd1 crd2 crd3 crd4 crd5 crd6 crd7 crd8 crd9 crd10))
 
-  ; È¸Àü º¯È¯
+  ; íšŒì „ ë³€í™˜
   
   (setq crd1 (rotateCoordinate startPoint radian crd1))
   (setq crd2 (rotateCoordinate startPoint radian crd2))
@@ -312,7 +312,7 @@
   (setq crd10 (rotateCoordinate startPoint radian crd10))
   
   
-  ; ¶óÀÎ ±×¸®±â
+  ; ë¼ì¸ ê·¸ë¦¬ê¸°
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2)))
   (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4)))
   (entmake (list (cons 0 "LINE") (cons 10 crd5) (cons 11 crd6)))
@@ -321,28 +321,28 @@
   (entmake (list (cons 0 "LINE") (cons 10 crd9) (cons 11 crd10) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* counterBoreDia 0.0262))))
 )
 
-; Ä«¿îÅÍ º¸¾î ¸¸µé±â
+; ì¹´ìš´í„° ë³´ì–´ ë§Œë“¤ê¸°
 (defun makeCounterBore (tapSize drillDia counterBoreDepth)
   (setq viewOption (viewOptionMenu (strcase (viewOptionKey 0) nil) (strcase (viewOptionKey 1) nil)))
   
   (while (and (/= viewOption (viewOptionKey 0)) (/= viewOption (strcase (viewOptionKey 0) nil)) (/= viewOption (viewOptionKey 1)) (/= viewOption (strcase (viewOptionKey 1) nil)))
-    (princ "\n ¿É¼Ç Å°¿öµå¸¦ ÀÔ·ÂÇÏ¼¼¿ä.")
+    (princ "\n ì˜µì…˜ í‚¤ì›Œë“œë¥¼ ì…ë ¥í•˜ì„¸ìš”.")
     (setq viewOption (viewOptionMenu (strcase (viewOptionKey 0) nil) (strcase (viewOptionKey 1) nil)))
   ) 
   
   (if (or (= viewOption (viewOptionKey 0)) (= viewOption (strcase (viewOptionKey 0) nil)))
-    (makeCountBoreTopView (getpoint "\n Áß½ÉÁ¡À» ÀÔ·ÂÇÏ¼¼¿ä: ") drillDia counterBoreDia)
+    (makeCountBoreTopView (getpoint "\n ì¤‘ì‹¬ì ì„ ì…ë ¥í•˜ì„¸ìš”: ") drillDia counterBoreDia)
   )
 
   (if (or (= viewOption (viewOptionKey 1)) (= viewOption (strcase (viewOptionKey 1) nil)))
     (progn
-      (setq startPoint (getpoint "\n »ğÀÔ¸éÀ» Å¬¸¯ÇÏ¼¼¿ä: "))
-      (setq endPoint (getpoint startPoint "\n °üÅë¸éÀ» Å¬¸¯ÇÏ¼¼¿ä: "))
+      (setq startPoint (getpoint "\n ì‚½ì…ë©´ì„ í´ë¦­í•˜ì„¸ìš”: "))
+      (setq endPoint (getpoint startPoint "\n ê´€í†µë©´ì„ í´ë¦­í•˜ì„¸ìš”: "))
       (setq dis (distance startPoint endPoint))
       (while (<= dis counterBoreDepth)
-        (princ "\n À¯È¿ÇÏÁö ¾ÊÀº ±íÀÌ ÀÔ´Ï´Ù.")
-        (setq startPoint (getpoint "\n »ğÀÔ¸éÀ» Å¬¸¯ÇÏ¼¼¿ä: "))
-        (setq endPoint (getpoint startPoint "\n °üÅë¸éÀ» Å¬¸¯ÇÏ¼¼¿ä: "))
+        (princ "\n ìœ íš¨í•˜ì§€ ì•Šì€ ê¹Šì´ ì…ë‹ˆë‹¤.")
+        (setq startPoint (getpoint "\n ì‚½ì…ë©´ì„ í´ë¦­í•˜ì„¸ìš”: "))
+        (setq endPoint (getpoint startPoint "\n ê´€í†µë©´ì„ í´ë¦­í•˜ì„¸ìš”: "))
         (setq dis (distance startPoint endPoint))
       )
       (makeCounterBoreSectionView startPoint endPoint drillDia counterBoreDia counterBoreDepth)
