@@ -40,6 +40,7 @@
     ((and (= returnHole "drillHole") (= returnView "topView")) (drawDrillHoleTopView centerPoint drillDia (atoi returnCenterLine)))
     ((and (= returnHole "drillHole") (= returnView "sectionView")) (drawDrillHoleSectionView startPoint endPoint drillDia (atoi returnCenterLine)))
     
+    ((and (= returnHole "counterBore") (= returnView "topView") (= returnSlot "1")) (drawCounterBoreTopViewSlot startPoint endPoint drillDia counterBoreDia (atoi returnCenterLine)))
     ((and (= returnHole "counterBore") (= returnView "topView")) (drawCounterBoreTopView centerPoint drillDia counterBoreDia (atoi returnCenterLine)))
     ((and (= returnHole "counterBore") (= returnView "sectionView")) (drawCounterBoreSectionView startPoint endPoint drillDia counterBoreDia counterBoreDepth (atoi returnCenterLine)))
     
@@ -150,7 +151,7 @@
 )
 
 ; 중심선 그리기
-(defun drawCenterMark (point diameter)
+(defun drawCenterLine (point diameter)
   
   (setq pointX (car point))
   (setq pointY (cadr point))
@@ -166,6 +167,15 @@
   (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4) (cons 62 1) (cons 6 "CENTER2") (cons 48 (* diameter (CONSTANT "LINE_TYPE_SCALE")))))
 )
 
+(defun drawCircle (diameter)
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* diameter 0.5))))
+)
+
+(defun drawLine (startPoint endPoint)
+  (entmake (list (cons 0 "LINE") (cons 10 startPoint) (cons 11 endPoint)))
+)
+
+(defun drawSlot)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ======================================================================== <구멍 규격> ========================================================================
@@ -261,7 +271,7 @@
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (entmake (list (cons 0 "ARC") (cons 10 centerPoint) (cons 40 (* tapDia 0.5)) (cons 50 (* -100 (/ PI 180))) (cons 51 (* 170 (/ PI 180))) (cons 62 1)))
   
-  (if (= centerLine 1) (drawCenterMark centerPoint tapDia))
+  (if (= centerLine 1) (drawCenterLine centerPoint tapDia))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -271,7 +281,7 @@
 ; 드릴 구멍 / 평면도
 (defun drawDrillHoleTopView (centerPoint drillDia centerLine)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
-  (if (= centerLine 1) (drawCenterMark centerPoint drillDia))
+  (if (= centerLine 1) (drawCenterLine centerPoint drillDia))
 )
 
 ; 드릴 구멍 / 평면도 / 장공
@@ -372,8 +382,15 @@
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* counterBoreDia 0.5))))
   
-  (if (= centerLine 1) (drawCenterMark centerPoint counterBoreDia))
+  (if (= centerLine 1) (drawCenterLine centerPoint counterBoreDia))
 )
+
+; 카운트 보어 / 평면도 / 장공
+(defun drawCounterBoreTopViewSlot (startPoint endPoint drillDia counterBoreDia centerLine)
+  (drawDrillHoleTopViewSlot startPoint endPoint drillDia 0)
+  (drawDrillHoleTopViewSlot startPoint endPoint counterBoreDia centerLine)
+)
+
 
 ; 카운터보어 / 단면도
 (defun drawCounterBoreSectionView (startPoint endPoint drillDia counterBoreDia counterBoreDepth centerLine)
@@ -449,5 +466,16 @@
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 counterSinkRadius)))
   
-  (if (= centerLine 1) (drawCenterMark centerPoint (* counterSinkRadius 2)))
+  (if (= centerLine 1) (drawCenterLine centerPoint (* counterSinkRadius 2)))
+)
+
+; 카운터싱크 / 평면도 / 장공
+(defun drawCounterSinkTopViewSlot (centerPoint drillDia counterSinkDepth counterSinkRadian centerLine)
+  
+  (setq counterSinkRadius (+ (* drillDia 0.5) (* counterSinkDepth (tan (* counterSinkRadian 0.5)))))
+  
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
+  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 counterSinkRadius)))
+  
+  (if (= centerLine 1) (drawCenterLine centerPoint (* counterSinkRadius 2)))
 )

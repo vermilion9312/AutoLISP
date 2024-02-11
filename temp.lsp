@@ -1,15 +1,10 @@
-(defun c:xx ()
-  
-  (setq centerPoint (getpoint "\n삽입점 입력:"))
-  
-  (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* 5 (CONSTANT "TEMP")))))
+(defun c:xx ( / )
 
+ (drawLine (getpoint) (getpoint) 1)
+  
 )
 
-(defun CONSTANT (string)
-  (cond
-    ((= string "TEMP") (setq return 0.333))
-  )
-  
-  return
+(defun drawLine (startPoint endPoint color)
+  (entmake (list (cons 0 "LINE") (cons 10 startPoint) (cons 11 endPoint)
+           (if (/= color nil) (cons 62 color))))
 )
