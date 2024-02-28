@@ -1,4 +1,4 @@
-; ¸ŞÀÎ ÇÔ¼ö
+; ë©”ì¸ í•¨ìˆ˜
 (defun c:59 (/ returnArr returnView returnHole returnTapSize returnCenterLine returnSlot
              centerPoint startPoint endPoint
              tapSize drillDia counterBoreDia tapDia counterBoreDepth counterSinkDepth)
@@ -29,9 +29,9 @@
   )
 
   (cond
-    ((and (= returnArr "single") (= returnView "topView") (= returnSlot "0")) (setq centerPoint (getpoint "\n»ğÀÔÁ¡ ÁöÁ¤:")))
-    ((and (= returnArr "single") (= returnView "topView") (= returnSlot "1")) (progn (setq startPoint (getpoint "\nÃ¹ ¹øÂ° Á¡ ÁöÁ¤:")) (setq endPoint (getpoint startPoint "\n´ÙÀ½ Á¡ ÁöÁ¤:"))))
-    ((and (= returnArr "single") (= returnView "sectionView")) (progn (setq startPoint (getpoint "\nÃ¹ ¹øÂ° Á¡ ÁöÁ¤:")) (setq endPoint (getpoint startPoint "\n´ÙÀ½ Á¡ ÁöÁ¤:"))))
+    ((and (= returnArr "single") (= returnView "topView") (= returnSlot "0")) (setq centerPoint (getpoint "\nì‚½ì…ì  ì§€ì •:")))
+    ((and (= returnArr "single") (= returnView "topView") (= returnSlot "1")) (progn (setq startPoint (getpoint "\nì²« ë²ˆì§¸ ì  ì§€ì •:")) (setq endPoint (getpoint startPoint "\në‹¤ìŒ ì  ì§€ì •:"))))
+    ((and (= returnArr "single") (= returnView "sectionView")) (progn (setq startPoint (getpoint "\nì²« ë²ˆì§¸ ì  ì§€ì •:")) (setq endPoint (getpoint startPoint "\në‹¤ìŒ ì  ì§€ì •:"))))
     ((= returnArr "multiple") (setq selectionSet (ssget)))
   )
   
@@ -55,14 +55,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; ¼±Á¾·ù CENTER2 ºÒ·¯¿À´Â ÇÔ¼ö
+; ì„ ì¢…ë¥˜ CENTER2 ë¶ˆëŸ¬ì˜¤ëŠ” í•¨ìˆ˜
 (defun loadCenter2 ()
   (if (= (tblsearch "ltype" "CENTER2") nil)
     (command "._-linetype" "load" "CENTER2" "" "")
   )
 )
 
-; ´ëÈ­Ã¢ ºÒ·¯¿À´Â ÇÔ¼ö
+; ëŒ€í™”ì°½ ë¶ˆëŸ¬ì˜¤ëŠ” í•¨ìˆ˜
 (defun loadDialog ()
    
   (setq dclId (load_dialog "holeDialog"))
@@ -92,7 +92,7 @@
   (unload_dialog dclId)
  )
 
-; ÃàÃ´ °ü·Ã »ó¼ö
+; ì¶•ì²™ ê´€ë ¨ ìƒìˆ˜
 (defun CONSTANT (STRING)
   (cond
     ((= STRING "LINE_TYPE_SCALE") (setq RETURN 0.0262))
@@ -102,13 +102,13 @@
   
   RETURN
 )
-; == ¼±Á¾·ù ÃàÃ´ ==
-; »óÇÑ°ª: 0.0349
-; Áß°£°ª: 0.0262
-; ÇÏÇÑ°ª: 0.0175
+; == ì„ ì¢…ë¥˜ ì¶•ì²™ ==
+; ìƒí•œê°’: 0.0349
+; ì¤‘ê°„ê°’: 0.0262
+; í•˜í•œê°’: 0.0175
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ======================================================================== <±âÃÊ ÇÔ¼ö> ========================================================================
+; ======================================================================== <ê¸°ì´ˆ í•¨ìˆ˜> ========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun tan (radian)
@@ -116,7 +116,7 @@
   return
 )
 
-; °¢µµ ±¸ÇÏ±â
+; ê°ë„ êµ¬í•˜ê¸°
 (defun findRadian (startPoint endPoint)
   
   (setq startPointX (car startPoint))
@@ -139,7 +139,7 @@
   
 )
 
-; È¸Àü º¯È¯ Çà·Ä
+; íšŒì „ ë³€í™˜ í–‰ë ¬
 (defun rotateCoordinate (refCrd radian coordinate)
   (setq a (car refCrd))
   (setq b (cadr refCrd))
@@ -150,7 +150,7 @@
   (list returnX returnY)
 )
 
-; Áß½É¼± ±×¸®±â
+; ì¤‘ì‹¬ì„  ê·¸ë¦¬ê¸°
 (defun drawCenterLine (point diameter)
   
   (setq pointX (car point))
@@ -178,14 +178,14 @@
 (defun drawSlot)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ======================================================================== <±¸¸Û ±Ô°İ> ========================================================================
+; ======================================================================== <êµ¬ë© ê·œê²©> ========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ÅÇ ¸®½ºÆ®
+; íƒ­ ë¦¬ìŠ¤íŠ¸
 (defun tapSizeList ()
   (list "M3" "M4" "M5" "M6" "M8" "M10" "M12" "M14" "M16" "M18" "M20" "M22" "M24" "M27" "M30" "M33")
 )
 
-; ÅÇ ±Ô°İ
+; íƒ­ ê·œê²©
 (defun tapSpec (tapSize)
   (cond
     ((= tapSize "M3") (list (list 3 2.4 3 6) (list 3 2.4 4.5 7.5) (list 3 2.4 5.5 8.5)))
@@ -212,7 +212,7 @@
   )
 )
 
-; Ä«¿îÅÍ º¸¾î ±Ô°İ
+; ì¹´ìš´í„° ë³´ì–´ ê·œê²©
 (defun counterBoreSpec (tapSize)
   (cond
     ((= tapSize "M3") (list 3.4 6.5 3.3))
@@ -239,7 +239,7 @@
   )
 )
 
-; Ä«¿îÅÍ ½ÌÅ© ±Ô°İ
+; ì¹´ìš´í„° ì‹±í¬ ê·œê²©
 (defun counterSinkSpec (tapSize)
   (cond
     ((= tapSize "M3") (list 3.4 1.75 (* PI 0.5)))
@@ -263,10 +263,10 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; =========================================================================== <ÅÇ> ===========================================================================
+; =========================================================================== <íƒ­> ===========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; ÅÇ / Æò¸éµµ
+; íƒ­ / í‰ë©´ë„
 (defun drawTapTopView (centerPoint drillDia tapDia centerLine)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (entmake (list (cons 0 "ARC") (cons 10 centerPoint) (cons 40 (* tapDia 0.5)) (cons 50 (* -100 (/ PI 180))) (cons 51 (* 170 (/ PI 180))) (cons 62 1)))
@@ -275,16 +275,16 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ======================================================================= <µå¸± ±¸¸Û> ========================================================================
+; ======================================================================= <ë“œë¦´ êµ¬ë©> ========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; µå¸± ±¸¸Û / Æò¸éµµ
+; ë“œë¦´ êµ¬ë© / í‰ë©´ë„
 (defun drawDrillHoleTopView (centerPoint drillDia centerLine)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (if (= centerLine 1) (drawCenterLine centerPoint drillDia))
 )
 
-; µå¸± ±¸¸Û / Æò¸éµµ / Àå°ø
+; ë“œë¦´ êµ¬ë© / í‰ë©´ë„ / ì¥ê³µ
 (defun drawDrillHoleTopViewSlot (startPoint endPoint drillDia centerLine)
 
   (setq dis (distance startPoint endPoint))
@@ -337,7 +337,7 @@
   )
 )
 
-; µå¸± ±¸¸Û / ´Ü¸éµµ
+; ë“œë¦´ êµ¬ë© / ë‹¨ë©´ë„
 (defun drawDrillHoleSectionView (startPoint endPoint drillDia centerLine)
   
   (setq dis (distance startPoint endPoint))
@@ -374,10 +374,10 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ======================================================================= <Ä«¿îÅÍº¸¾î> ========================================================================
+; ======================================================================= <ì¹´ìš´í„°ë³´ì–´> ========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Ä«¿îÅÍº¸¾î / Æò¸éµµ
+; ì¹´ìš´í„°ë³´ì–´ / í‰ë©´ë„
 (defun drawCounterBoreTopView (centerPoint drillDia counterBoreDia centerLine)
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* drillDia 0.5))))
   (entmake (list (cons 0 "CIRCLE") (cons 10 centerPoint) (cons 40 (* counterBoreDia 0.5))))
@@ -385,26 +385,26 @@
   (if (= centerLine 1) (drawCenterLine centerPoint counterBoreDia))
 )
 
-; Ä«¿îÆ® º¸¾î / Æò¸éµµ / Àå°ø
+; ì¹´ìš´íŠ¸ ë³´ì–´ / í‰ë©´ë„ / ì¥ê³µ
 (defun drawCounterBoreTopViewSlot (startPoint endPoint drillDia counterBoreDia centerLine)
   (drawDrillHoleTopViewSlot startPoint endPoint drillDia 0)
   (drawDrillHoleTopViewSlot startPoint endPoint counterBoreDia centerLine)
 )
 
 
-; Ä«¿îÅÍº¸¾î / ´Ü¸éµµ
+; ì¹´ìš´í„°ë³´ì–´ / ë‹¨ë©´ë„
 (defun drawCounterBoreSectionView (startPoint endPoint drillDia counterBoreDia counterBoreDepth centerLine)
-  ; ½ÃÀÛÁ¡°ú ³¡Á¡ »çÀÌÀÇ °Å¸®
+  ; ì‹œì‘ì ê³¼ ëì  ì‚¬ì´ì˜ ê±°ë¦¬
   (setq dis (distance startPoint endPoint)) 
   (setq radian (findRadian startPoint endPoint))
   
-  ; ½ÃÀÛÁ¡°ú ³¡Á¡ÀÇ x, y ÁÂÇ¥
+  ; ì‹œì‘ì ê³¼ ëì ì˜ x, y ì¢Œí‘œ
   (setq startPointX (car startPoint))
   (setq startPointY (cadr startPoint))
   (setq endPointX (car endPoint))
   (setq endPointY (cadr endPoint))
   
-  ; °¢µµ°¡ 0ÀÏ ¶§ Ä«¿îÅÍº¸¾î ÁÂÇ¥
+  ; ê°ë„ê°€ 0ì¼ ë•Œ ì¹´ìš´í„°ë³´ì–´ ì¢Œí‘œ
   (setq x0 (- startPointX (* dis 0.15)))
   (setq x1 startPointX)
   (setq x2 (+ startPointX counterBoreDepth))
@@ -431,7 +431,7 @@
   
   ; (setq crdList (list crd1 crd2 crd3 crd4 crd5 crd6 crd7 crd8 crd9 crd10))
 
-  ; È¸Àü º¯È¯
+  ; íšŒì „ ë³€í™˜
   (setq crd1 (rotateCoordinate startPoint radian crd1))
   (setq crd2 (rotateCoordinate startPoint radian crd2))
   (setq crd3 (rotateCoordinate startPoint radian crd3))
@@ -443,7 +443,7 @@
   (setq crd9 (rotateCoordinate startPoint radian crd9))
   (setq crd10 (rotateCoordinate startPoint radian crd10))
   
-  ; ¶óÀÎ ±×¸®±â
+  ; ë¼ì¸ ê·¸ë¦¬ê¸°
   (entmake (list (cons 0 "LINE") (cons 10 crd1) (cons 11 crd2)))
   (entmake (list (cons 0 "LINE") (cons 10 crd3) (cons 11 crd4)))
   (entmake (list (cons 0 "LINE") (cons 10 crd5) (cons 11 crd6)))
@@ -455,10 +455,10 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; ======================================================================= <Ä«¿îÅÍ½ÌÅ©> ========================================================================
+; ======================================================================= <ì¹´ìš´í„°ì‹±í¬> ========================================================================
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Ä«¿îÅÍ½ÌÅ© / Æò¸éµµ
+; ì¹´ìš´í„°ì‹±í¬ / í‰ë©´ë„
 (defun drawCounterSinkTopView (centerPoint drillDia counterSinkDepth counterSinkRadian centerLine)
   
   (setq counterSinkRadius (+ (* drillDia 0.5) (* counterSinkDepth (tan (* counterSinkRadian 0.5)))))
@@ -469,7 +469,7 @@
   (if (= centerLine 1) (drawCenterLine centerPoint (* counterSinkRadius 2)))
 )
 
-; Ä«¿îÅÍ½ÌÅ© / Æò¸éµµ / Àå°ø
+; ì¹´ìš´í„°ì‹±í¬ / í‰ë©´ë„ / ì¥ê³µ
 (defun drawCounterSinkTopViewSlot (centerPoint drillDia counterSinkDepth counterSinkRadian centerLine)
   
   (setq counterSinkRadius (+ (* drillDia 0.5) (* counterSinkDepth (tan (* counterSinkRadian 0.5)))))
