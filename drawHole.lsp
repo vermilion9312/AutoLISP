@@ -59,6 +59,7 @@
 (defun loadCenter2 ()
   (if (= (tblsearch "ltype" "CENTER2") nil)
     (command "._-linetype" "load" "CENTER2" "" "")
+    (command "._-linetype" "?" "acadltiso.lin")
   )
 )
 

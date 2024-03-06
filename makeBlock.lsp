@@ -1,9 +1,9 @@
 (defun c:32 (/ ent bp)
    (graphscr)
 
-   (prompt " >> ╟╢ц╪ ╪╠ец <<")
+   (prompt " >> Й╟²Л╡╢ Л└═М┐² <<")
    (setq ent (ssget ))
-   (setq bp (getpoint "\n ╩Пюта║ е╛╦╞ : "))(terpri)
+   (setq bp (getpoint "\n Л┌╫Л·┘Л═░ М│╢К╕╜ : "))(terpri)
    (command "_copybase" bp ent "" "_pasteblock" bp "erase" ent "")
    (princ)
 );defun
