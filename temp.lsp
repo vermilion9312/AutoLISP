@@ -1,10 +1,12 @@
-(defun c:xx ( / )
-
- (drawLine (getpoint) (getpoint) 1)
-  
+(defun c:qq ()
+  (print_number)
+  (princ)
 )
 
-(defun drawLine (startPoint endPoint color)
-  (entmake (list (cons 0 "LINE") (cons 10 startPoint) (cons 11 endPoint)
-           (if (/= color nil) (cons 62 color))))
+(defun print_number (/ i)
+  (setq i 2)
+  (while (>= i 0)
+    (princ i)
+    (setq i (1- i))
+  )
 )
