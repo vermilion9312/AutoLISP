@@ -10,9 +10,10 @@
   (setq polyline_entity_name (car (entsel)))
   (setq polyline_object (entget polyline_entity_name))
   (setq circle_center_point (cdr (assoc 10 polyline_object)))
-
+  (setq previous_center_point nil)
   (setq i 0)
   (while (< i 400)
+    
     (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CIRCLE_RADIUS)))
     (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CONVEYOR_PITCH)))
     
@@ -33,13 +34,15 @@
     (setq intersection_point1 (list x1_coordinate y1_coordinate))
     (setq intersection_point2 (list x2_coordinate y2_coordinate))
     
-    (if (/= x1_coordinate x2_coordinate)
-      (if (< x1_coordinate x2_coordinate)
-        (setq circle_center_point intersection_point2)
+    (if (/= previous_center_point intersection_point1)
+      (progn
+        (setq previous_center_point center_point)
         (setq circle_center_point intersection_point1)
       )
-      (if (< y1_coordinate y2_coordinate)
-        (setq circle_center_point intersection_point1)
+    )
+    (if (/= previous_center_point intersection_point2)
+      (progn
+        (setq previous_center_point center_point)
         (setq circle_center_point intersection_point2)
       )
     )
