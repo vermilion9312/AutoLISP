@@ -1,81 +1,52 @@
+(vl-load-com)
+(setq autocad_application_object (vlax-get-acad-object))
+(setq active_document_object (vla-get-activedocument autocad_application_object))
+(setq model_space_object  (vla-get-modelspace active_document_object))
+
 (defun c:qq ()
   (setq CONVEYOR_PITCH 76.47)
-  (setq entity_object (entget (car (entsel))))
-  (setq start_point (assoc 10 entity_object))
+  (setq CIRCLE_RADIUS (/ 45 2.0))
   
-  (setq coordinate_list nil)
+  (setq polyline_entity_name (car (entsel)))
+  (setq polyline_object (entget polyline_entity_name))
+  (setq circle_center_point (cdr (assoc 10 polyline_object)))
+
   (setq i 0)
-  (while (< i (length entity_object))
-    (if (= 10 (car (nth i entity_object)))
-      (setq coordinate (cdr (nth i entity_object)))
-      (setq coordinate_list (cons coordinate coordinate_list))
-      ; (princ "ff")
+  (while (< i 400)
+    (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CIRCLE_RADIUS)))
+    (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CONVEYOR_PITCH)))
+    
+    (setq circle_entity_name (entlast))
+    
+    (setq variant_polyline_object (vlax-ename->vla-object polyline_entity_name))
+    (setq variant_circle_object (vlax-ename->vla-object circle_entity_name))
+    
+    (setq intersection_points (vla-IntersectWith variant_polyline_object variant_circle_object acExtendNone))
+    
+    (setq temporary_points (vlax-safearray->list (vlax-variant-value intersection_points)))
+    
+    (setq x1_coordinate (nth 0 temporary_points))
+    (setq y1_coordinate (nth 1 temporary_points))
+    (setq x2_coordinate (nth 3 temporary_points))
+    (setq y2_coordinate (nth 4 temporary_points))
+    
+    (setq intersection_point1 (list x1_coordinate y1_coordinate))
+    (setq intersection_point2 (list x2_coordinate y2_coordinate))
+    
+    (if (/= x1_coordinate x2_coordinate)
+      (if (< x1_coordinate x2_coordinate)
+        (setq circle_center_point intersection_point2)
+        (setq circle_center_point intersection_point1)
+      )
+      (if (< y1_coordinate y2_coordinate)
+        (setq circle_center_point intersection_point1)
+        (setq circle_center_point intersection_point2)
+      )
     )
+
     (setq i (1+ i))
   )
   
-  ; (setq i 0)
-  ; (while (< (length coordinate_list))
-  ;   (entmake (list (cons 0 "CIRCLE") (cons 10 (nth i coordinate_list)) (cons 40 (/ 45.0 2))))
-  ;   (setq i (1+ i))
-  ; )
+  
   (princ)
 )
-
-; (setq array (subst 99 (nth 3 array) array))
-
-; ((-1 . <도면요소 이름: 19c3a38ed70>)
-;  (0 . "LWPOLYLINE")
-;  (330 . <도면요소 이름: 19c73c771f0>)
-;  (5 . "33F")
-;  (100 . "AcDbEntity")
-;  (67 . 0)
-;  (410 . "Model")
-;  (8 . "CEN")
-;  (100 . "AcDbPolyline")
-;  (90 . 8)
-;  (70 . 1)
-;  (43 . 0.0)
-;  (38 . 0.0)
-;  (39 . 0.0)
-;  (10 8472.13 7457.72);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . -0.414214)
-;  (91 . 0)
-;  (10 8583.53 7569.12);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . 0.0)
-;  (91 . 0)
-;  (10 14160.7 7569.12);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . -0.414214)
-;  (91 . 0)
-;  (10 14272.1 7457.72);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . 0.0)
-;  (91 . 0)
-;  (10 14272.1 5880.52);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . -0.414214)
-;  (91 . 0)
-;  (10 14160.7 5769.12);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . 0.0)
-;  (91 . 0)
-;  (10 8607.13 5769.12);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . -0.414214)
-;  (91 . 0)
-;  (10 8472.13 5904.12);;
-;  (40 . 0.0)
-;  (41 . 0.0)
-;  (42 . 0.0)
-;  (91 . 0)
-;  (210 0.0 0.0 1.0)) 
