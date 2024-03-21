@@ -46,6 +46,8 @@
         (setq circle_center_point intersection_point2)
       )
     )
+  
+
 
     (setq i (1+ i))
   )
