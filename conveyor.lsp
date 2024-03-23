@@ -12,7 +12,7 @@
   (setq circle_center_point (cdr (assoc 10 polyline_object)))
   (setq previous_center_point nil)
   (setq i 0)
-  (while (< i 400)
+  (while (< i 900)
     
     (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CIRCLE_RADIUS)))
     (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CONVEYOR_PITCH)))
@@ -31,19 +31,27 @@
     (setq x2_coordinate (nth 3 temporary_points))
     (setq y2_coordinate (nth 4 temporary_points))
     
+    (setq logic_x1_coordinate (atof (rtos x1_coordinate 2 2)))
+    (setq logic_y1_coordinate (atof (rtos y1_coordinate 2 2)))
+    (setq logic_x2_coordinate (atof (rtos x2_coordinate 2 2)))
+    (setq logic_y2_coordinate (atof (rtos y2_coordinate 2 2)))
+    
+    (setq logic_intersection_point1 (list logic_x1_coordinate logic_y1_coordinate))
+    (setq logic_intersection_point2 (list logic_x2_coordinate logic_y2_coordinate))
+    
     (setq intersection_point1 (list x1_coordinate y1_coordinate))
     (setq intersection_point2 (list x2_coordinate y2_coordinate))
     
-    (if (/= previous_center_point intersection_point1)
+    (if (/= previous_center_point logic_intersection_point1)
       (progn
         (setq previous_center_point center_point)
-        (setq circle_center_point intersection_point1)
+        (setq circle_center_point logic_intersection_point1)
       )
     )
-    (if (/= previous_center_point intersection_point2)
+    (if (/= previous_center_point logic_intersection_point2)
       (progn
         (setq previous_center_point center_point)
-        (setq circle_center_point intersection_point2)
+        (setq circle_center_point logic_intersection_point2)
       )
     )
   
