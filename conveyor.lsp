@@ -10,9 +10,14 @@
   (setq polyline_entity_name (car (entsel)))
   (setq polyline_object (entget polyline_entity_name))
   (setq circle_center_point (cdr (assoc 10 polyline_object)))
+  ; (setq x_coordinate (car circle_center_point))
+  ; (setq y_coordinate (cadr circle_center_point))
   (setq previous_center_point nil)
+  ; (setq previous_x_coordinate x_coordinate)
+  ; (setq previous_y_coordinate y_coordinate)
+  
   (setq i 0)
-  (while (< i 400)
+  (while (< i 100)
     
     (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CIRCLE_RADIUS)))
     (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CONVEYOR_PITCH)))
@@ -22,30 +27,47 @@
     (setq variant_polyline_object (vlax-ename->vla-object polyline_entity_name))
     (setq variant_circle_object (vlax-ename->vla-object circle_entity_name))
     
-    (setq intersection_points (vla-IntersectWith variant_polyline_object variant_circle_object acExtendNone))
+    (setq intersection_point_safearray (vla-IntersectWith variant_polyline_object variant_circle_object acExtendNone))
     
-    (setq temporary_points (vlax-safearray->list (vlax-variant-value intersection_points)))
+    (setq intersection_point_list (vlax-safearray->list (vlax-variant-value intersection_point_safearray)))
     
-    (setq x1_coordinate (nth 0 temporary_points))
-    (setq y1_coordinate (nth 1 temporary_points))
-    (setq x2_coordinate (nth 3 temporary_points))
-    (setq y2_coordinate (nth 4 temporary_points))
+    (princ "\n")
+    (princ (nth 0 intersection_point_list))
+    (princ "\n")
+    (princ (* (nth 0 intersection_point_list) 1000))
+    (princ "\n")
+    (princ (atoi (rtos (* (nth 0 intersection_point_list) 1000) 2 0)))
     
-    (setq intersection_point1 (list x1_coordinate y1_coordinate))
-    (setq intersection_point2 (list x2_coordinate y2_coordinate))
     
-    (if (/= previous_center_point intersection_point1)
-      (progn
-        (setq previous_center_point center_point)
-        (setq circle_center_point intersection_point1)
-      )
-    )
-    (if (/= previous_center_point intersection_point2)
-      (progn
-        (setq previous_center_point center_point)
-        (setq circle_center_point intersection_point2)
-      )
-    )
+
+    ; (setq first_intersection_point (list (nth 0 intersection_point_list) (atof (rtos (nth 1 intersection_point_list) 2 opt))))
+    ; (setq second_intersection_point (list (atof (rtos (nth 3 intersection_point_list) 2 opt)) (atof (rtos (nth 4 intersection_point_list) 2 opt))))
+    ; (princ "\n--------------------------------------------")
+    ; (princ "\nprevious_center_point: ")
+    ; (princ previous_center_point)
+    ; (princ "\nfirst_intersection_point: ")
+    ; (princ first_intersection_point)
+    ; (princ "\nsecond_intersection_point: ")
+    ; (princ second_intersection_point)
+    ; (princ "\ncircle_center_point: ")
+    ; (princ circle_center_point)
+
+    
+
+
+    ; (princ (strcat "\n" (rtos (+ i 1))))
+    ; (if (not (equal previous_center_point first_intersection_point))
+    ;   (progn
+    ;     (setq previous_center_point circle_center_point)
+    ;     (setq circle_center_point first_intersection_point)
+    ;   )
+    ;   (progn
+    ;     (setq previous_center_point circle_center_point)
+    ;     (setq circle_center_point second_intersection_point)
+    ;   )
+    ; )
+    
+
   
 
 
