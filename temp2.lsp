@@ -1,9 +1,13 @@
-(defun c:qq ()
-  (strlen (get_entity_name))
-  (princ)
-)
-
-
-(defun get_entity_name ()
-  (car (entsel))
+(defun c:rcen(/ ent pcen) 
+(vl-load-com) 
+(setq ent (car (entsel "\n Select Region: "))) 
+(if (and ent (= (vlax-get-property (vlax-ename->vla-object ent) 'Objectname) "AcDbRegion")) 
+(progn 
+(setq pcen (vlax-safearray->list (vlax-variant-value (vla-get-Centroid (vlax-ename->vla-object ent))))) 
+(print pcen) 
+(entmake (list (cons 0 "point") (cons 410 (getvar "ctab")) (cons 10 pcen))) 
+) 
+(princ "\n Object not selected or is not Region!") 
+) 
+(princ) 
 )
