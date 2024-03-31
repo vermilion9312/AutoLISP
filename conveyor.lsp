@@ -1,6 +1,8 @@
 (vl-load-com)
 
 (defun c:qq ()
+  (setq default_cmdecho (getvar "cmdecho"))
+  (setvar "cmdecho" 0)
   (setq CONVEYOR_PITCH 76.47)
   (setq CIRCLE_RADIUS (/ 45 2.0))
   
@@ -14,18 +16,25 @@
   
   ; do-while 일단 첫 체인 먼저 그림
   (draw_chain)
+  (setq circle_count 1)
 
   (setq boolean nil)
   (while (= boolean nil)
     (draw_chain)
+    (setq circle_count (1+ circle_count))
     (setq boolean (is_in_circle circle_center_point first_point CONVEYOR_PITCH)) ; 그릴려는 중심점이 처음 시작하는 피치원 안에 있으면 종료
   )
   
   (setq last_pitch (distance first_point last_point))
   (princ "\n마지막 피치: ")
   (princ last_pitch)
+  (princ ", 체인 개수: ")
+  (princ circle_count)
   
   (entmake (list (cons 0 "TEXT") (cons 10 last_point) (cons 40 20.0) (cons 1 (rtos last_pitch 2 3)))) 
+  (command "TEXT" "TL" last_point 20.0 0 circle_count)
+  
+  (setvar "cmdecho" default_cmdecho)
 
   (princ)
 )
