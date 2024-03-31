@@ -1,4 +1,9 @@
-(defun c:xx ()
-  (command "circle" pause 5 "")
+(defun c:qq ()
+  (strlen (get_entity_name))
   (princ)
+)
+
+
+(defun get_entity_name ()
+  (car (entsel))
 )
