@@ -24,6 +24,7 @@
   (setq last_pitch (distance first_point last_point))
   (princ "\n마지막 피치: ")
   (princ last_pitch)
+  (entmake (list (cons 0 "TEXT") (cons 10 last_point) (cons 40 20.0) (cons 1 (rtos last_pitch 2 3)))) 
 
   (princ)
 )
