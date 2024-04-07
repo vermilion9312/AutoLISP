@@ -1,8 +1,9 @@
 (load "activex")
 (load "draw_entity")
 (load "constant")
+(load "boolean_evaluation")
 
-(defun c:qq (/ is_true polyline_entity_name polyline_entity_object polyline_entity_type)
+(defun c:qq (/ is_true polyline_entity_name polyline_entity_object polyline_entity_type circle_count)
   (setq default_cmdecho (getvar "cmdecho"))
   (setvar "cmdecho" 0)
   
@@ -20,8 +21,7 @@
   )
   
   
-  (setq polyline_object (entget polyline_entity_name)) ; 객체 데이터 가져오기ㅏ
-  (setq circle_center_point (cdr (assoc 10 polyline_object))) ; dxf 10번 좌표 가져오기
+  (setq circle_center_point (cdr (assoc 10 polyline_entity_object))) ; dxf 10번 좌표 가져오기
   (setq first_point circle_center_point) ; 시작점 따로 저장
   (setq previous_center_point nil)
   
@@ -31,11 +31,11 @@
   (draw_chain)
   (setq circle_count 1)
 
-  (setq boolean nil)
-  (while (= boolean nil)
+  (setq is_true T)
+  (while is_true
     (draw_chain)
     (setq circle_count (1+ circle_count))
-    (setq boolean (is_in_circle circle_center_point first_point CONVEYOR_PITCH)) ; 그릴려는 중심점이 처음 시작하는 피치원 안에 있으면 종료
+    (setq is_true (not (is_in_circle circle_center_point first_point CONVEYOR_PITCH))) ; 그릴려는 중심점이 처음 시작하는 피치원 안에 있으면 종료
   )
   
   (setq last_pitch (distance first_point last_point))
@@ -66,10 +66,6 @@
   (<= (distance input_point circle_center_point) radius)
 )
 
-; 원 그리기
-; (defun draw_circle (center_point radius)
-;   (entmake (list (cons 0 "CIRCLE") (cons 10 center_point) (cons 40 radius)))
-; )
 
 ; 체인 그리기
 (defun draw_chain ()
@@ -77,7 +73,6 @@
     ; 처음에만 초록원 그리기
     (if (= i 0)
       (progn
-        
         (draw_circle circle_center_point CIRCLE_RADIUS GREEN)
         (setq i (1+ i))
       )
@@ -121,3 +116,17 @@
   ; 피치원 삭제
   (entdel (entlast))
 )
+
+; (defun c:qq ()
+;   (setq polyline_entity_name (car (entsel)))
+  
+;   (setq variant_polyline_object (vlax-ename->vla-object polyline_entity_name))
+  
+  
+;   (setq coordinates (vlax-get variant_polyline_object "coordinates"))
+  
+;   (vlax-put variant_polyline_object "coordinates" (list 0.0 10.0 10.0 10.0 10.0 0.0 0.0 0.0))
+  
+  
+;   (princ)
+; )
