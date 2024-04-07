@@ -1,12 +1,25 @@
-(vl-load-com)
+(load "activex")
+(load "draw_entity")
+(load "constant")
 
-(defun c:qq ()
+(defun c:qq (/ is_true polyline_entity_name polyline_entity_object polyline_entity_type)
   (setq default_cmdecho (getvar "cmdecho"))
   (setvar "cmdecho" 0)
-  (setq CONVEYOR_PITCH 76.47)
-  (setq CIRCLE_RADIUS (/ 45 2.0))
   
-  (setq polyline_entity_name (car (entsel))) ; 폴리 라인 도면요소이름 가져오기
+
+  (setq is_true T)
+  (while is_true
+
+    (setq polyline_entity_name (car (entsel "\n폴리라인을 선택하세요: ")))
+    (setq polyline_entity_object (entget polyline_entity_name))
+    (setq polyline_entity_type (cdr (assoc 0 polyline_entity_object)))
+    
+    (if (= polyline_entity_type "LWPOLYLINE")
+      (setq is_true nil)
+    )
+  )
+  
+  
   (setq polyline_object (entget polyline_entity_name)) ; 객체 데이터 가져오기ㅏ
   (setq circle_center_point (cdr (assoc 10 polyline_object))) ; dxf 10번 좌표 가져오기
   (setq first_point circle_center_point) ; 시작점 따로 저장
@@ -54,9 +67,9 @@
 )
 
 ; 원 그리기
-(defun draw_circle (center_point radius)
-  (entmake (list (cons 0 "CIRCLE") (cons 10 center_point) (cons 40 radius)))
-)
+; (defun draw_circle (center_point radius)
+;   (entmake (list (cons 0 "CIRCLE") (cons 10 center_point) (cons 40 radius)))
+; )
 
 ; 체인 그리기
 (defun draw_chain ()
@@ -64,14 +77,15 @@
     ; 처음에만 초록원 그리기
     (if (= i 0)
       (progn
-        (entmake (list (cons 0 "CIRCLE") (cons 10 circle_center_point) (cons 40 CIRCLE_RADIUS) (cons 62 3)))
+        
+        (draw_circle circle_center_point CIRCLE_RADIUS GREEN)
         (setq i (1+ i))
       )
-      (draw_circle circle_center_point CIRCLE_RADIUS)
+      (draw_circle circle_center_point CIRCLE_RADIUS WHITE)
     )
 
     ; 피치원 그리기
-    (draw_circle circle_center_point CONVEYOR_PITCH)
+    (draw_circle circle_center_point CONVEYOR_PITCH WHITE)
     
     ; 마지막으로 그린 피치원의 엔티티 네임 가져오기
     (setq circle_entity_name (entlast))

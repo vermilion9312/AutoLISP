@@ -4,23 +4,43 @@
   (setq active_document (vla-get-activedocument autocad_application_object))
   (setq model_space_collection (vla-get-modelspace active_document))
   (setq polyline_entity_name (car (entsel)))
-  ; (setq polyline_entity_object (entget polyline_entity_name))
-  ; (princ polyline_entity_object)
   
   (setq variant_polyline_object (vlax-ename->vla-object polyline_entity_name))
   
-  (setq coordinates (vla-get-coordinates variant_polyline_object))
+  ; (setq coordinates (vlax-safearray->list (vlax-variant-value (vla-get-Coordinates variant_polyline_object))))
   
+  (setq coordinates (vlax-get variant_polyline_object "coordinates"))
   (princ coordinates)
   
-  ; (vlax-dump-object variant_polyline_object)
+  (vlax-put variant_polyline_object "coordinates" (list 0.0 10.0 10.0 10.0 10.0 0.0 0.0 0.0))
+  
+  ; (setq new_coordinates (vlax-make-safearray vlax-vbDouble (cons 0 8)))
+
+  ; (vlax-safearray-fill new_coordinates (list 0 10 10 10 10 0 0 0))
+  
+  ; (setq new_coordinates (vlax-make-safearray vlax-vbDouble (cons 0 7)))
+  ; (vlax-safearray-fill new_coordinates '(0.0 10.0 10.0 10.0 10.0 0.0 0.0 0.0))
 
   
+  ; (vla-put-Coordinate variant_polyline_object 0 new_coordinates)
+  ; (vla-Update variant_polyline_object)
   
-  
+
+ 
+  ; (princ coordinates)
   
   (princ)
 )
+; (0.700323 3.14073 3.24514 3.14073 3.24514 1.51791 0.700323 1.51791)
+
+  ; (setq polyline_entity_object (entget polyline_entity_name))
+  ; (princ polyline_entity_object)
+  
+  ; (vlax-dump-object coordinates)
+    ;   (setq newCoord (vlax-make-safearray vlax-vbDouble '(0 . 2)))
+    ; (vlax-safearray-fill newCoord (list (+ (nth 0 coord) 1)
+		; 		        (nth 1 coord)
+		; 		        (nth 2 coord)))
 
 ; IAcadLWPolyline: AutoCAD Lightweight Polyline 인터페이스
 ; 특성 값:
