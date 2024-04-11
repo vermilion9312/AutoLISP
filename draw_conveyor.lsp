@@ -3,7 +3,7 @@
 (load "constant")
 (load "boolean_evaluation")
 
-(defun c:qq (/ is_true polyline_entity_name polyline_entity_object polyline_entity_type circle_count)
+(defun c:77 (/ is_true polyline_entity_name polyline_entity_object polyline_entity_type circle_count)
   (setq default_cmdecho (getvar "cmdecho"))
   (setvar "cmdecho" 0)
   
