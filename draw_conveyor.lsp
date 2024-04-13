@@ -1,18 +1,18 @@
 (vl-load-com)
 
 (defun c:qq ()
-  (setq default_cmdecho (getvar 'cmdecho))
-  (setvar 'cmdecho 0)
+  ; (setq default_cmdecho (getvar 'cmdecho))
+  ; (setvar 'cmdecho 0)
   
 
 
-  (while (not (= polyline_entity_type "LWPOLYLINE"))
-    (setq entity_name (car (entsel "\n폴리라인을 선택하세요: ")))
-    (setq entity_object (entget entity_name))
-    (setq entity_type (cdr (assoc 0 entity_object)))
-  )
+  ; (while (not (= polyline_entity_type "LWPOLYLINE"))
+  ;   (setq entity_name (car (entsel "\n폴리라인을 선택하세요: ")))
+  ;   (setq entity_object (entget entity_name))
+  ;   (setq entity_type (cdr (assoc 0 entity_object)))
+  ; )
   
-  (getvar 'cmdecho default_cmdecho)
+  ; (getvar 'cmdecho default_cmdecho)
 )
 
 ; (defun set_system_variables (/ default_cmdecho)
