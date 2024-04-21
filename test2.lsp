@@ -18,7 +18,7 @@
   (setq once T)
   
   ; 폴리선만 선택하도록 예외 처리
-  (while (not (= polyline_entity_type "LWPOLYLINE"))
+  (while (/= polyline_entity_type "LWPOLYLINE"))
     (setq polyline_entity_name (car (entsel "\n폴리선 선택: ")))
     (setq polyline_entity_data (entget polyline_entity_name))
     (setq polyline_entity_type (cdr (assoc 0 polyline_entity_data)))
