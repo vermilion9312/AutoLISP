@@ -7,6 +7,8 @@
   
   (setq variant_polyline_object (vlax-ename->vla-object polyline_entity_name))
   
+  
+  
   ; (setq coordinates (vlax-safearray->list (vlax-variant-value (vla-get-Coordinates variant_polyline_object))))
   
   (setq coordinates (vlax-get variant_polyline_object "coordinates"))
