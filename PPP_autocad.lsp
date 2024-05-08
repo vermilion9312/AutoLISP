@@ -68,18 +68,16 @@
 	;; can be used with vla-transformby to
 	;; transform objects from the UCS to the WCS
 	(defun UCS2WCSMatrix ()
-	(vlax-tmatrix
-	(append
-	(mapcar
-	'(lambda (vector origin)
-	(append (trans vector 1 0 t) (list origin))
-	)
-	(list '(1 0 0) '(0 1 0) '(0 0 1))
-	(trans '(0 0 0) 0 1)
-	)
-	(list '(0 0 0 1))
-	)
-	)
+    (vlax-tmatrix
+      (append
+        (mapcar
+          '(lambda (vector origin) (append (trans vector 1 0 t) (list origin)))
+          (list '(1 0 0) '(0 1 0) '(0 0 1))
+          (trans '(0 0 0) 0 1)
+        )
+        (list '(0 0 0 1))
+      )
+    )
 	)
 	;; transform objects from the WCS to the UCS
 	(defun WCS2UCSMatrix ()
