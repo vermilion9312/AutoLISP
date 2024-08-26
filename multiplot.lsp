@@ -1,4 +1,4 @@
-(defun c:qq ()
+(defun c:77 ()
   (vl-load-com)
   
   (setq default_cmdecho (getvar "CMDECHO"))
