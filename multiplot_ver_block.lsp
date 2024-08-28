@@ -32,7 +32,7 @@
     (setq sheet_ratio (/ sheet_length sheet_width))
     (setq sheet_ratio (fix (* sheet_ratio 1000)))
     
-    (if (or (= sheet_ratio 1408) (= sheet_ratio 1428) (= sheet_ratio 1438))
+    (if (or (= sheet_ratio 1408) (= sheet_ratio 1428) (= sheet_ratio 1438) (= sheet_ratio 1414))
       (progn
         (setq some_list (list (car lower_left_corner) (cadr lower_left_corner) (list lower_left_corner upper_right_corner)))
         (setq my_list (cons some_list my_list))
@@ -116,12 +116,3 @@
           proceed_with_plot           ; 플롯 진행
   )
 )
-
-
-; ((-10753.0 -14948.0 ((-10753.0 -14948.0 0.0) (5646.96 -3300.94 1.3734e-56)))
-;  (9334.6 -14948.0 ((9334.6 -14948.0 0.0) (25734.6 -3300.94 1.3734e-56)))
-;  (25984.6 -14864.5 ((25984.6 -14864.5 0.0) (34184.6 -9040.94 6.86699e-57)))
-;  (5896.96 -14780.9 ((5896.96 -14780.9 0.0) (8334.6 -13086.0 0.0)))
-;  (5896.96 -12880.9 ((5896.96 -12880.9 0.0) (8334.6 -11186.0 0.0)))
-;  (5896.96 -10980.9 ((5896.96 -10980.9 0.0) (8334.6 -9285.96 0.0))))
-
