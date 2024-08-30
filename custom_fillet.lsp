@@ -1,0 +1,15 @@
+(defun c:5 ()
+  (setq radius (getint "\n반지름 지정: "))
+  (command "FILLET" "RADIUS" radius)
+  (command "FILLET")
+  (princ)
+)
+
+; (defun set_system_variables ()
+;   (setq default_cmdecho (getvar "CMDECHO"))
+;   (setvar "CMDECHO" 0)
+; )
+
+; (defun reset_system_variables ()
+;   (setq)
+; )
