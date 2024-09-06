@@ -162,3 +162,5 @@
 (defun mxv ( m v )
   (mapcar '(lambda ( r ) (apply '+ (mapcar '* r v))) m)
 )
+
+
